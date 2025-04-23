@@ -10,6 +10,9 @@
   },
   "keywords": [],
   "author": "",
+  "devDependencies": {
+    "@repo/common": "workspace:*"
+  },
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
     "@repo/common-backend": "workspace:*",
