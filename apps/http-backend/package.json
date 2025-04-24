@@ -11,7 +11,8 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
-    "@repo/common": "workspace:*"
+    "@repo/common": "workspace:*",
+    "@repo/db" : "workspace:*"
   },
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
