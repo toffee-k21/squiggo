@@ -4,7 +4,7 @@ import { signinHandler, signupHandler } from "../controllers/user";
 
 const userRouter: Router = express.Router();
 
-userRouter.get('signup/',signupHandler)
-userRouter.get('signin/',signinHandler)
+userRouter.post('/signup',signupHandler)
+userRouter.post('/signin',signinHandler)
 
 export default userRouter

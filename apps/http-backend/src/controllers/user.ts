@@ -6,10 +6,10 @@ import { prisma } from "@repo/db/prima"
 
 
 export const signinHandler = async (req:Request, res:Response) =>{
-  const data = SigninSchema.safeParse(req.body);
-   if(!data.success){
-     res.json("input validation error")
-   }
+  // const data = SigninSchema.safeParse(req.body);
+  //  if(!data.success){
+  //    res.json("input validation error")
+  //  }
 const email = req.body.email
 const password = req.body.password
 const user = await prisma.user.findUnique({
@@ -27,13 +27,19 @@ res.json(token);
 }
 
 export const signupHandler = async (req:Request, res:Response) =>{
-   const data = CreateUserSchema.safeParse(req.body);
-   if(!data.success){
-     res.json("input validation error")
-   }
-   const user = await prisma.user.create({
+  //  const data = CreateUserSchema.safeParse(req.body);
+  //  if(!data.success){
+  //    res.json("input validation error")
+  //  }
+  let user;
+  try{ 
+     user = await prisma.user.create({
     data: req.body
-   })
+   })}
+   catch(e){
+    res.json("user already exists")
+    return;
+   }
    
    if(!user){
   res.json("user not found")
