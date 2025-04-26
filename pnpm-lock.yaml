@@ -98,6 +98,9 @@ importers:
         specifier: ^8.18.1
         version: 8.18.1
     devDependencies:
+      '@repo/common-backend':
+        specifier: workspace:*
+        version: link:../../packages/common-backend
       '@types/jsonwebtoken':
         specifier: ^9.0.9
         version: 9.0.9
