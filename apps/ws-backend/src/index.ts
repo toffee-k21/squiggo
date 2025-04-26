@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { WebSocket, WebSocketServer } from 'ws';
 import {JWT_SECRET} from "@repo/common-backend/config"
-
+import {prisma} from "@repo/db/prima"
 const wss = new WebSocketServer({ port: 8080 });
 
 
@@ -18,6 +18,17 @@ interface User {
 //   message String
 //   userId  String
 // }
+
+function isRoomExists(a:number){
+  const room = prisma.room.findUnique({
+    where:{id:a}
+  })
+  if(!room){
+    return false;
+  }else{
+    return true;
+  }
+}
 
 let users: User[] = [];
 
@@ -51,26 +62,43 @@ wss.on('connection', function connection(ws, request) {
 
       parsedData = JSON.parse(data.toString());
       if(parsedData.type="join_room"){
-        const user = users.find(x => x.ws == ws);
+        const user = users.find(u => u.ws == ws);
+      if(!isRoomExists(parsedData.roomId)){
+        return;
+      };
         user?.rooms.push(parsedData.roomId);
       }
 
       if(parsedData.type="leave_room"){
         const user = users.find(x => x.ws == ws);
+        if(!isRoomExists(parsedData.roomId)){
+        return;
+        };
         user?.rooms.filter(id => id==parsedData.roomId);
       }
 
       if(parsedData.type="chat"){
+        if(!isRoomExists(parsedData.roomId)){
+        return;
+        };
         users.forEach(user => {
           if(user.rooms.includes(parsedData.roomId)){
             user.ws.send(JSON.stringify({
               type:"chat",
               message: parsedData.message,
-              roomId: parsedData.roomId
+              roomId: parsedData.roomId,
+              userId: userId // it will be handled from here only
             }))
           }
-          
         });
+            prisma.chat.create({
+              data:{
+                type: parsedData.type,
+                roomId: parsedData.roomId,
+                message: parsedData.message,
+                userId: userId
+              }
+            })
       }
     })
 });
