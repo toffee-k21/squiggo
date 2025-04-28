@@ -38,8 +38,9 @@ function authenticateUser(url:string){
       console.log("token not found"); //todo: write code -> send to client 
       return null;
     }
-    const user = jwt.verify(token,JWT_SECRET);
-    return user}
+    const id = jwt.verify(token,JWT_SECRET);
+    return id
+  }
     catch(e){
       console.log(e);
       return null;
@@ -55,26 +56,29 @@ wss.on('connection', function connection(ws, request) {
         return;
     }
 
-    const user = authenticateUser(url);
+    const id = authenticateUser(url);
 
-    if(!user){
+    
+    console.log(id)
+
+    if(!id){
       console.log("invalid user"); //todo: write code -> send to client 
       return;
     }
 
-    const userId = (user as jwt.JwtPayload).id;
+    const userId = String(id);
 
     users.push({
       userId,
       rooms:[],
       ws,
     });
-
-    ws.on('message',(data)=>{
+    ws.on('message',async (data)=>{
       let parsedData;
-
+      
       parsedData = JSON.parse(data.toString());
-      if(parsedData.type="join_room"){
+      try{
+      if(parsedData.type == "join_room"){
         const user = users.find(u => u.ws == ws);
       if(!isRoomExists(parsedData.roomId)){
         console.log('room not exists');
@@ -83,16 +87,39 @@ wss.on('connection', function connection(ws, request) {
         user?.rooms.push(parsedData.roomId);
       }
 
-      if(parsedData.type="leave_room"){
+      if(parsedData.type == "leave_room"){
         const user = users.find(x => x.ws == ws);
         if(!isRoomExists(parsedData.roomId)){
           console.log('room not exists');
         return;
         };
-        user?.rooms.filter(id => id==parsedData.roomId);
+        if(!user){
+        return;
+        }
+        user.rooms = user.rooms.filter(id => id!=parsedData.roomId);
       }
+    } catch(e){
+      console.error(e)
+    }
+
+    try{
 
       if(parsedData.type="chat"){
+         const user = users.find(x => x.ws == ws);
+         if(user?.rooms.includes(parsedData.roomId)){
+         const chat = await prisma.chat.create({
+              data:{
+                type: parsedData.type,
+                roomId: parsedData.roomId,
+                message: parsedData.message,
+                userId: userId
+              }
+            })
+            if(!chat){
+              // console.log("haiiiiii");
+              return;
+            }
+            console.log(chat)
         if(!isRoomExists(parsedData.roomId)){
           console.log('room not exists');
         return;
@@ -107,14 +134,13 @@ wss.on('connection', function connection(ws, request) {
             }))
           }
         });
-            prisma.chat.create({
-              data:{
-                type: parsedData.type,
-                roomId: parsedData.roomId,
-                message: parsedData.message,
-                userId: userId
-              }
-            })
       }
+    }
+
+    } catch(e){
+      console.error(e);
+    }
     })
 });
+
+// concern : state is only depended on backend , if backend goes off, all data / varaible wil be cleared. so, to avoid this -> tempo solution is make a model and store in db and reload db again.
