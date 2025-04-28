@@ -20,9 +20,9 @@ if(!user){
   res.json("user not found")
   return;
 }
-const userId = user.id;
+const id = user.id;
 
-const token = jwt.sign(userId,JWT_SECRET)
+const token = jwt.sign(id,JWT_SECRET)
 res.json(token);
 }
 
@@ -37,16 +37,16 @@ export const signupHandler = async (req:Request, res:Response) =>{
     data: req.body
    })}
    catch(e){
-    res.json("user already exists")
+    res.json({error:"user already exists"})
     return;
    }
    
    if(!user){
-  res.json("user not found")
+  res.json({error:"user not found"})
   return;
 }
-const userId = user.id;
+const id = user.id;
 
-const token = jwt.sign(userId,JWT_SECRET)
+const token = jwt.sign(id,JWT_SECRET)
 res.json(token);
 }

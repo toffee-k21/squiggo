@@ -1,12 +1,39 @@
 import { Request, Response } from "express"
 
-import {CreateRoomSchema } from "@repo/common/valid"
+import { CreateRoomSchema } from "@repo/common/valid"
+import { prisma } from "@repo/db/prima"
+
+interface RequestExtend extends Request {
+userId : string
+}
 
 
-export const roomHandler = (req:Request, res:Response) =>{
+export const createRoomHandler = async (Req:Request, res:Response) =>{
   //  const data = CreateRoomSchema.safeParse(req.body);
   //  if(!data.success){
   //    res.json("input validation error")
   //  }
-   res.json("room is here")
+  const req = Req as RequestExtend;
+try{
+  console.log(req.userId)
+  const resp = await prisma.room.create({
+    data:{
+      slug: req.body.slug,
+      adminId: req.userId
+    }
+  })
+
+  if(!resp){
+    return;
+  }
+
+  res.json({room: resp.id});
+}
+  catch(e){
+    res.json({error:e})
+  }
+}
+
+export const showRooms = (req:Request,res:Response) =>{
+  res.json({message:"hello from room"})
 }

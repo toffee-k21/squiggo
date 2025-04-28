@@ -19,8 +19,9 @@ interface User {
 //   userId  String
 // }
 
-function isRoomExists(a:number){
-  const room = prisma.room.findUnique({
+
+async function isRoomExists(a:number){
+  const room = await prisma.room.findUnique({
     where:{id:a}
   })
   if(!room){
@@ -30,20 +31,32 @@ function isRoomExists(a:number){
   }
 }
 
+function authenticateUser(url:string){
+  try {const queryParam = new URLSearchParams(url?.split('?')[1]);
+    const token = queryParam.get('token');
+    if(!token){
+      console.log("token not found"); //todo: write code -> send to client 
+      return null;
+    }
+    const user = jwt.verify(token,JWT_SECRET);
+    return user}
+    catch(e){
+      console.log(e);
+      return null;
+    }
+}
+
 let users: User[] = [];
 
 wss.on('connection', function connection(ws, request) {
     const url = request.url;
+
     if(!url){
         return;
     }
-    const queryParam = new URLSearchParams(url?.split('?')[1]);
-    const token = queryParam.get('token');
-    if(!token){
-      console.log("token not found"); //todo: write code -> send to client 
-      return;
-    }
-    const user = jwt.verify(token,JWT_SECRET);
+
+    const user = authenticateUser(url);
+
     if(!user){
       console.log("invalid user"); //todo: write code -> send to client 
       return;
@@ -64,6 +77,7 @@ wss.on('connection', function connection(ws, request) {
       if(parsedData.type="join_room"){
         const user = users.find(u => u.ws == ws);
       if(!isRoomExists(parsedData.roomId)){
+        console.log('room not exists');
         return;
       };
         user?.rooms.push(parsedData.roomId);
@@ -72,6 +86,7 @@ wss.on('connection', function connection(ws, request) {
       if(parsedData.type="leave_room"){
         const user = users.find(x => x.ws == ws);
         if(!isRoomExists(parsedData.roomId)){
+          console.log('room not exists');
         return;
         };
         user?.rooms.filter(id => id==parsedData.roomId);
@@ -79,6 +94,7 @@ wss.on('connection', function connection(ws, request) {
 
       if(parsedData.type="chat"){
         if(!isRoomExists(parsedData.roomId)){
+          console.log('room not exists');
         return;
         };
         users.forEach(user => {
