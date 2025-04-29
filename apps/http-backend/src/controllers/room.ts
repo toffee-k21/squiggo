@@ -34,6 +34,20 @@ try{
   }
 }
 
-export const showRooms = (req:Request,res:Response) =>{
-  res.json({message:"hello from room"})
+export const showRooms = async (req:Request,res:Response) =>{
+  const roomId = Number(req.params.roomId);
+  const resp = await prisma.chat.findMany({
+    where :{
+      roomId : roomId
+    },
+     orderBy: {
+      id : "desc"
+     }, 
+     take : 50
+  })
+  if(!resp){
+    res.json({message:"no message"})
+  }
+
+  res.json(resp);
 }

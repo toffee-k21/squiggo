@@ -6,6 +6,6 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 const roomRouter: Router = express.Router();
 
 roomRouter.post('/create',authMiddleware,createRoomHandler)
-roomRouter.get('/',authMiddleware,showRooms)
+roomRouter.get('/:roomId',authMiddleware,showRooms)
 
 export default roomRouter;
