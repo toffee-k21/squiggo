@@ -103,7 +103,7 @@ wss.on('connection', function connection(ws, request) {
     }
 
     try{
-
+// todo : add queue system for db 
       if(parsedData.type="chat"){
          const user = users.find(x => x.ws == ws);
          if(user?.rooms.includes(parsedData.roomId)){

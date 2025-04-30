@@ -51,3 +51,19 @@ export const showRooms = async (req:Request,res:Response) =>{
 
   res.json(resp);
 }
+
+export const slugToId = async (req:Request,res:Response) =>{
+  const slug = req.params.slug;
+const room = await prisma.room.findFirst({
+  where:{
+    slug:  slug
+  }
+})
+
+if(!room){
+  res.json({message:"error"})
+  return;
+}
+
+res.json({roomId:room.id});
+}

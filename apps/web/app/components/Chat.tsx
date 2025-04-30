@@ -1,0 +1,18 @@
+import React from 'react'
+
+interface ChatProps {
+    data: {
+        id: number,
+        type: string,
+        roomId: number,
+        message: string,
+        userId: string
+    }
+}
+const Chat = ({data}: ChatProps) => {
+  return (
+    <div>{data.message}</div>
+  )
+}
+
+export default Chat
