@@ -6,13 +6,15 @@ import { useState } from "react";
 
 export default function Home() {
   const [slug, setSlug] = useState("");
-  const router = useRouter()
+  const router = useRouter();
+
   return (
     <div>
-      <input onChange={(e) => {
-          setSlug(e.target.value);
-        }} value={slug} type="text">
-      </input>
+      <input
+        type="text"
+        value={slug}
+        onChange={(e) => setSlug(e.target.value)}
+      />
       <button onClick={()=>{
         router.push(`room/${slug}`);
       }}>join</button>

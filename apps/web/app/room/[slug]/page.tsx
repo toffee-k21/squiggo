@@ -22,20 +22,20 @@ const slugToId = async (slug: string) => {
 
 const handleFetchRooms = async (id: number) => {
     const token = (await cookies()).get("token")?.value;
-    const resp = await fetch(`${backend_url}/room/${id}`,{
+    console.log(token)
+    const resp = await fetch(`${backend_url}/room/chat/${id}`,{
         headers:{
-            authentication: `Bearer ${token}`
+            authorization: `Bearer ${token}`
         }
     });
+    console.log(resp);
     const data = await resp.json();
-    console.log(data);
+    console.log(data)
     return data;
-    // return roomId;
 }
 
 const fetchRooms = async (slug: string) => {
     const roomId = await slugToId(slug);
-    console.log(roomId)
     const resp = await handleFetchRooms(roomId);
     return resp;
 }
@@ -46,7 +46,8 @@ const ChatRoom = async ({ params }: {
         slug: string
     }
 }) => {
-    const chats = await fetchRooms(params.slug);
+    const slug = await params.slug
+    const chats = await fetchRooms(slug);
     {console.log(chats)}
     return (
         <div>
