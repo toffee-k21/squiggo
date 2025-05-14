@@ -1,4 +1,3 @@
-
 import Chat from './Chat'
 import { cookies } from 'next/headers';
 import config from '../utils.json';
@@ -16,10 +15,11 @@ const ChatRoom = async ({roomId}:{roomId: number}) => {
   let chats;
 
   const Id = roomId;
+  console.log(Id)
 
      const handleFetchChats = async (id: number) => {
           const token = (await cookies()).get("token")?.value;
-          console.log(token)
+          console.log(token);
           const resp = await fetch(`${backend_url}/room/chat/${id}`, {
               headers: {
                   authorization: `Bearer ${token}`
@@ -31,9 +31,8 @@ const ChatRoom = async ({roomId}:{roomId: number}) => {
           return data;
       }
 
-
-        const c = await handleFetchChats(Id);
-        chats = c;
+      const c = await handleFetchChats(Id);
+      chats = c;
 
   return (
     <div>
@@ -47,4 +46,4 @@ const ChatRoom = async ({roomId}:{roomId: number}) => {
   )
 }
 
-export default ChatRoom
+export default ChatRoom;

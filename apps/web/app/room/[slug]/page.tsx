@@ -2,15 +2,6 @@ import React from 'react';
 import config from '../../utils.json';
 import ChatRoom from '../../components/ChatRoom';
 
-
-interface Chat {
-    id: number,
-    type: string,
-    roomId: number,
-    message: string,
-    userId: string
-}
-
 const backend_url = config.backend_url;
 
 const RoomPage = async ({ params }: {
@@ -18,15 +9,20 @@ const RoomPage = async ({ params }: {
         slug: string
     }
 }) => {
+    
     const slugToId = async (slug: string) => {
+        console.log(slug)
         const resp = await fetch(`${backend_url}/room/${slug}`);
+        console.log(resp)
         const data = await resp.json();
         const roomId = data.roomId;
+        console.log(roomId);
         return roomId;
     }
 
     const slug = await params.slug;
     const roomId = await slugToId(slug);
+    console.log(roomId);
 
     return (
         <div>

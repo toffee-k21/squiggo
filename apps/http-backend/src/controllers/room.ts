@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import { CreateRoomSchema } from "@repo/common/valid"
+// import { CreateRoomSchema } from "@repo/common/valid"
 import { prisma } from "@repo/db/prima"
 
 interface RequestExtend extends Request {
@@ -14,7 +14,18 @@ export const createRoomHandler = async (Req:Request, res:Response) =>{
   //    res.json("input validation error")
   //  }
   const req = Req as RequestExtend;
+
+  const u = await prisma.user.findUnique({
+    where: { id: req.userId }
+  });
+
+  if (!u) {
+    res.status(400).json({ error: "User does not exist" });
+    return;
+  }
+   
 try{
+  
   console.log(req.userId)
   const resp = await prisma.room.create({
     data:{
@@ -30,7 +41,7 @@ try{
   res.json({room: resp.id});
 }
   catch(e){
-    res.json({error:e})
+    res.json({error:"error : "+e})
   }
 }
 

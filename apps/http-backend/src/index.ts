@@ -9,6 +9,6 @@ app.use(express.json());
 app.use('/', userRouter)
 app.use('/room', roomRouter)
 
-app.listen(3001,"127.0.0.1", ()=>{
+app.listen(3001, "127.0.0.1", ()=>{
     console.log("server started at port 3001")
 });
