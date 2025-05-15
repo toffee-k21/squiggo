@@ -1,6 +1,9 @@
+'use client'
 import Chat from './Chat'
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 import config from '../utils.json';
+import { useSocket } from '../hooks/useSocket';
+import { useEffect, useState } from 'react';
 
 const backend_url = config.backend_url;
 interface ChatProps {
@@ -10,36 +13,58 @@ interface ChatProps {
     message: string,
     userId: string
 }
-const ChatRoom = async ({roomId}:{roomId: number}) => {
+const ChatRoom =  ({roomId}:{roomId: number}) => {
 
-  let chats;
+  const [chats,setChats] = useState([]);
 
   const Id = roomId;
-  console.log(Id)
+  const ws = useSocket();
+  const socket = ws.socket;
 
-     const handleFetchChats = async (id: number) => {
-          const token = (await cookies()).get("token")?.value;
-          console.log(token);
+      useEffect(()=>{
+        const handleFetchChats = async (id: number) => {
+          const token = document.cookie.split('; ')
+            .find(row => row.startsWith('token='))
+            ?.split('=')[1];
+          if(!token){
+            return;
+          }
           const resp = await fetch(`${backend_url}/room/chat/${id}`, {
-              headers: {
-                  authorization: `Bearer ${token}`
-              }
+            headers: {
+              authorization: `Bearer ${token}`
+            }
           });
           console.log(resp);
           const data = await resp.json();
-          console.log(data)
-          return data;
-      }
+          console.log("data",data)
+          setChats(data);
+         }
 
-      const c = await handleFetchChats(Id);
-      chats = c;
+        handleFetchChats(Id);
+      },[])
+
+      useEffect(()=>{
+        if (!socket) {
+          return;
+        }
+        socket.send(JSON.stringify({
+          type: "join_room",
+          roomId: Id,
+          message: "joining !"
+        }));
+        socket.onmessage = (data) => {
+          console.log("data", data);
+        }
+      },[])
+
+      console.log(chats);
 
   return (
     <div>
       <div>ChatRoom</div>
-      {
+      {  
         chats.map((chat:ChatProps)=>{
-         return <li><Chat data={chat}/></li>
+         return <Chat key={chat.id} data={chat}/>
         })
       }
     </div>

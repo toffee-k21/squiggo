@@ -12,13 +12,15 @@
   "author": "",
   "devDependencies": {
     "@repo/common": "workspace:*",
-    "@repo/db" : "workspace:*"
+    "@repo/db": "workspace:*",
+    "@types/cors": "^2.8.18"
   },
   "dependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/common-backend": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2"
   },

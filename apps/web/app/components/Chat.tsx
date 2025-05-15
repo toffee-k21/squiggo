@@ -11,7 +11,7 @@ interface ChatProps {
 }
 const Chat = ({data}: ChatProps) => {
   return (
-    <div>{data.message}</div>
+    <div key={data.id}>{data.message}</div>
   )
 }
 

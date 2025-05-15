@@ -13,16 +13,17 @@ const RoomPage = async ({ params }: {
     const slugToId = async (slug: string) => {
         console.log(slug)
         const resp = await fetch(`${backend_url}/room/${slug}`);
-        console.log(resp)
+        // console.log(resp)
         const data = await resp.json();
         const roomId = data.roomId;
-        console.log(roomId);
+        // console.log(roomId);
         return roomId;
     }
 
-    const slug = await params.slug;
+    const p = await params;
+    const slug = p.slug;
     const roomId = await slugToId(slug);
-    console.log(roomId);
+    // console.log(roomId);
 
     return (
         <div>
