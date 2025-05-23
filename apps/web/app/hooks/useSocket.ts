@@ -8,14 +8,23 @@ export function useSocket(){
     const [loading, setLoading] = useState(true);
     const [socket, setSocket] = useState<WebSocket>();
 
-    useEffect(()=>{
-        const ws = new WebSocket(WS_URL);
+    useEffect(() => {
+        const token = document.cookie.split('; ')
+            .find(row => row.startsWith('token='))?.split('=')[1];
+        
+        const ws = new WebSocket(`${WS_URL}?token=${token}`);
+        
         ws.onopen = () => {
-            setLoading(false);
             setSocket(ws);
-        }
-
-    },[]);
+            setLoading(false);
+        };
+    
+        return () => {
+            ws.close();
+            setSocket(undefined);
+            setLoading(true);
+        };
+    }, []);
 
     return {
         socket,

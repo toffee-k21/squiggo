@@ -15,11 +15,10 @@ interface ChatProps {
 }
 const ChatRoom =  ({roomId}:{roomId: number}) => {
 
-  const [chats,setChats] = useState([]);
-
+  const [chats, setChats] = useState([]);
+  const [message, setMessage] = useState<String>();
+  const {loading,socket} = useSocket();
   const Id = roomId;
-  const ws = useSocket();
-  const socket = ws.socket;
 
       useEffect(()=>{
         const handleFetchChats = async (id: number) => {
@@ -52,12 +51,27 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
           roomId: Id,
           message: "joining !"
         }));
-        socket.onmessage = (data) => {
-          console.log("data", data);
-        }
-      },[])
+        socket.onmessage = (event: MessageEvent) => {
+          try {
+            const message = JSON.parse(event.data);
+            console.log("Received:", message);
+            // You can update chats here if needed
+          } catch (err) {
+            console.error("Invalid JSON from server:", event.data);
+          }
+        };
+        
+      },[socket, loading])
 
       console.log(chats);
+
+  const handleMsgEmit = () =>{
+    socket?.send(JSON.stringify({
+      type: "chat",
+      roomId: Id,
+      message
+    }));
+  }
 
   return (
     <div>
@@ -67,6 +81,8 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
          return <Chat key={chat.id} data={chat}/>
         })
       }
+      <input type='text' placeholder='type message here' onChange={(e)=>setMessage(e.target.value)}/>
+      <button onClick={handleMsgEmit}>send</button>
     </div>
   )
 }

@@ -80,10 +80,10 @@ wss.on('connection', function connection(ws, request) {
       try{
       if(parsedData.type == "join_room"){
         const user = users.find(u => u.ws == ws);
-      if(!isRoomExists(parsedData.roomId)){
-        console.log('room not exists');
-        return;
-      };
+        if(!isRoomExists(parsedData.roomId)){
+          console.log('room not exists');
+          return;
+        };
         user?.rooms.push(parsedData.roomId);
       }
 
