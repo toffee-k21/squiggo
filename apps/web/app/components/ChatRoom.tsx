@@ -7,16 +7,16 @@ import { useEffect, useState } from 'react';
 
 const backend_url = config.backend_url;
 interface ChatProps {
-    id: number,
+    id?: number,
     type: string,
     roomId: number,
     message: string,
-    userId: string
+    userId?: string
 }
 const ChatRoom =  ({roomId}:{roomId: number}) => {
 
-  const [chats, setChats] = useState([]);
-  const [message, setMessage] = useState<String>();
+  const [chats, setChats] = useState<ChatProps[]>([]);
+  const [chatMessage, setChatMessage] = useState<string>();
   const {loading,socket} = useSocket();
   const Id = roomId;
 
@@ -55,7 +55,7 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
           try {
             const message = JSON.parse(event.data);
             console.log("Received:", message);
-            // You can update chats here if needed
+            setChats((prev: ChatProps[] )=> [...prev, message]);
           } catch (err) {
             console.error("Invalid JSON from server:", event.data);
           }
@@ -66,11 +66,16 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
       console.log(chats);
 
   const handleMsgEmit = () =>{
-    socket?.send(JSON.stringify({
+    if(!chatMessage){
+      return;
+    }
+    let data: ChatProps = {
       type: "chat",
       roomId: Id,
-      message
-    }));
+      message: chatMessage
+    };
+    socket?.send(JSON.stringify(data));
+    setChats((prev: ChatProps[]) => [...prev, data]);
   }
 
   return (
@@ -81,7 +86,7 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
          return <Chat key={chat.id} data={chat}/>
         })
       }
-      <input type='text' placeholder='type message here' onChange={(e)=>setMessage(e.target.value)}/>
+      <input type='text' placeholder='type message here' onChange={(e)=>setChatMessage(e.target.value)}/>
       <button onClick={handleMsgEmit}>send</button>
     </div>
   )

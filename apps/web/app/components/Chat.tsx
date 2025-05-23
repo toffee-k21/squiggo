@@ -2,11 +2,11 @@ import React from 'react'
 
 interface ChatProps {
     data: {
-        id: number,
+        id?: number,
         type: string,
         roomId: number,
         message: string,
-        userId: string
+        userId?: string
     }
 }
 const Chat = ({data}: ChatProps) => {
