@@ -49,7 +49,7 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
         socket.send(JSON.stringify({
           type: "join_room",
           roomId: Id,
-          message: "joining !"
+          message: "joined room !"
         }));
         socket.onmessage = (event: MessageEvent) => {
           try {
