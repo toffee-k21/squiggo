@@ -154,6 +154,42 @@ wss.on('connection', function connection(ws, request) {
         console.error(e);
       }
         }
+
+        if(parsedData.type == "sketch"){
+          try{
+          const user = users.find(x => x.ws == ws);
+          if(user?.rooms.includes(parsedData.roomId)){
+          const chat = await prisma.sketch.create({
+                data:{
+                  type: parsedData.type,
+                  roomId: parsedData.roomId,
+                  message: parsedData.message,
+                  userId: userId
+                }
+              })
+              if(!chat){
+                // console.log("haiiiiii");
+                return;
+              }
+              if(!isRoomExists(parsedData.roomId)){
+                console.log('room not exists');
+              return;
+              };
+              users.forEach(user => {
+                if(user.rooms.includes(parsedData.roomId)){
+                user.ws.send(JSON.stringify({
+                type:"sketch",
+                message: parsedData.message,
+                roomId: parsedData.roomId,
+                userId: userId // it will be handled from here only
+              }))
+            }
+          });
+        }
+      } catch(e){
+        console.error(e);
+      }
+        }
     // todo : add queue system for db 
     })
 });
