@@ -23,7 +23,7 @@ const SignUp = () => {
     }
     return (
         <div>
-            <h1>SignUp</h1>
+            <h1 className='text-white'>SignUp</h1>
             <div>
                 <form onSubmit={handleSubmit}>
                 <input ref={usernameRef} type="text" />

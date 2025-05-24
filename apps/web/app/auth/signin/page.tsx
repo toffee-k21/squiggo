@@ -20,8 +20,8 @@ const SignIn = () => {
         document.cookie = `token=${token}; path=/; max-age=2592000`
     }
     return (
-        <div>
-            <h1>SignUp</h1>
+        <div >
+            <h1 className='text-white'>SignUp</h1>
             <div>
                 <form onSubmit={handleSubmit}>
                     <input ref={emailRef} type="email" />

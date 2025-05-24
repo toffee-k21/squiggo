@@ -9,11 +9,12 @@ const InputBox = () => {
   return (
       <div>
           <input
+              className='bg-white'
               type="text"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
           />
-          <button onClick={() => {
+          <button className='text-white' onClick={() => {
               router.push(`room/${slug}`);
           }}>join</button>
       </div>
