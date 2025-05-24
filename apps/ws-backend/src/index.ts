@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { WebSocket, WebSocketServer } from 'ws';
 import {JWT_SECRET} from "@repo/common-backend/config"
 import {prisma} from "@repo/db/prima"
@@ -35,6 +35,7 @@ async function isRoomExists(a:number){
   }
 }
 
+
 function authenticateUser(url:string){
   try {
     const queryParam = new URLSearchParams(url?.split('?')[1]);
@@ -43,8 +44,13 @@ function authenticateUser(url:string){
       console.log("token not found"); //todo: write code -> send to client 
       return null;
     }
-    const id = jwt.verify(token,JWT_SECRET);
-    return id
+    const id:string = jwt.verify(token,JWT_SECRET) as string;
+    if(!id){
+      wss.close();
+    }
+    // const user =  await prisma.user.findUnique({ where: { id } }); //to-do : resolve it ! if user is deleted but if token is there for user then the user can access even if he/she is removed from db
+    return id;
+    // else wss.close()
   }
     catch(e){
       console.log(e);
@@ -56,21 +62,20 @@ let users: User[] = [];
 
 wss.on('connection', function connection(ws, request) {
     const url = request.url;
+    let id = null;
 
-    if(!url){
+      if(!url){
+        wss.close();
         return;
-    }
-
-    const id = authenticateUser(url);
-
-    
-    console.log(id)
-
-    if(!id){
-      console.log("invalid user"); //todo: write code -> send to client 
-      return;
-    }
-
+      }
+      id =  authenticateUser(url);
+      console.log("iddddddddddddd",id);
+  
+      if(!id){
+        console.log("invalid user"); //todo: write code -> send to client 
+        return;
+      }
+   
     const userId = String(id);
 
     users.push({
@@ -82,69 +87,74 @@ wss.on('connection', function connection(ws, request) {
       let parsedData;
       
       parsedData = JSON.parse(data.toString());
-      try{
-      if(parsedData.type == "join_room"){
-        const user = users.find(u => u.ws == ws);
-        if(!isRoomExists(parsedData.roomId)){
-          console.log('room not exists');
-          return;
-        };
-        user?.rooms.push(parsedData.roomId);
-      }
+        if(parsedData.type == "join_room"){
+        try{
+            const user = users.find(u => u.ws == ws);
+            if(!isRoomExists(parsedData.roomId)){
+              console.log('room not exists');
+              return;
+            };
+            user?.rooms.push(parsedData.roomId);
 
-      if(parsedData.type == "leave_room"){
-        const user = users.find(x => x.ws == ws);
-        if(!isRoomExists(parsedData.roomId)){
-          console.log('room not exists');
-        return;
-        };
-        if(!user){
-        return;
+          } catch(e){
+            console.error(e)
+          }
         }
-        user.rooms = user.rooms.filter(id => id!=parsedData.roomId);
-      }
-    } catch(e){
-      console.error(e)
-    }
 
-    try{
-// todo : add queue system for db 
-      if(parsedData.type="chat"){
-         const user = users.find(x => x.ws == ws);
-         if(user?.rooms.includes(parsedData.roomId)){
-         const chat = await prisma.chat.create({
-              data:{
-                type: parsedData.type,
-                roomId: parsedData.roomId,
-                message: parsedData.message,
-                userId: userId
-              }
-            })
-            if(!chat){
-              // console.log("haiiiiii");
+        if(parsedData.type == "leave_room"){
+          try {
+            const user = users.find(x => x.ws == ws);
+            if(!isRoomExists(parsedData.roomId)){
+              console.log('room not exists');
+              return;
+            };
+            if(!user){
               return;
             }
-            console.log(chat)
-        if(!isRoomExists(parsedData.roomId)){
-          console.log('room not exists');
-        return;
-        };
-        users.forEach(user => {
-          if(user.rooms.includes(parsedData.roomId)){
-            user.ws.send(JSON.stringify({
-              type:"chat",
-              message: parsedData.message,
-              roomId: parsedData.roomId,
-              userId: userId // it will be handled from here only
-            }))
+            user.rooms = user.rooms.filter(id => id!=parsedData.roomId);
+          } catch(e){
+            console.error(e)
           }
-        });
-      }
-    }
+        }
 
-    } catch(e){
-      console.error(e);
-    }
+        if(parsedData.type == "chat"){
+          try{
+          const user = users.find(x => x.ws == ws);
+          console.log("log", userId )
+          if(user?.rooms.includes(parsedData.roomId)){
+          const chat = await prisma.chat.create({
+                data:{
+                  type: parsedData.type,
+                  roomId: parsedData.roomId,
+                  message: parsedData.message,
+                  userId: userId
+                }
+              })
+              if(!chat){
+                // console.log("haiiiiii");
+                return;
+              }
+              console.log(chat)
+              if(!isRoomExists(parsedData.roomId)){
+                console.log('room not exists');
+              return;
+              };
+              users.forEach(user => {
+                if(user.rooms.includes(parsedData.roomId)){
+                user.ws.send(JSON.stringify({
+                type:"chat",
+                message: parsedData.message,
+                roomId: parsedData.roomId,
+                userId: userId // it will be handled from here only
+              }))
+            }
+          });
+        }
+      } catch(e){
+        console.error(e);
+      }
+        }
+    // todo : add queue system for db 
     })
 });
 

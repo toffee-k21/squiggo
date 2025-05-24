@@ -82,7 +82,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
   return (
     <div className='flex'>
       <div>
-        <div className='absolute top-0'>Stream your Sketch</div>
+        <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
         <Canvas />
       </div>
       <div className='h-96 overflow-y-scroll'>
@@ -92,7 +92,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
         })
       }
       <input type='text' placeholder='type message here' onChange={(e) => setChatMessage(e.target.value)} />
-      <button onClick={handleMsgEmit}>send</button>
+      <button className={"cursor-pointer"} onClick={handleMsgEmit}>send</button>
       </div>
     </div>
   )

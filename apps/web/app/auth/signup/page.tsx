@@ -22,7 +22,7 @@ const SignUp = () => {
         document.cookie = `token=${token}; path=/; max-age=2592000`
     }
     return (
-        <div>
+        <div className='m-60'>
             <h1 className='text-white'>SignUp</h1>
             <div>
                 <form onSubmit={handleSubmit}>
