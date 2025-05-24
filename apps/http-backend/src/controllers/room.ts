@@ -45,7 +45,7 @@ try{
   }
 }
 
-export const showRooms = async (req:Request,res:Response) =>{
+export const showChats = async (req:Request,res:Response) =>{
   const roomId = Number(req.params.roomId);
   const resp = await prisma.chat.findMany({
     where :{
@@ -77,4 +77,22 @@ if(!room){
 }
 
 res.json({roomId:room.id});
+}
+
+export const showSketches = async (req:Request, res:Response ) =>{
+  const roomId = Number(req.params.roomId);
+  const resp = await prisma.sketch.findMany({
+    where :{
+      roomId : roomId
+    },
+     orderBy: {
+      id : "desc"
+     }, 
+     take : 50
+  })
+  if(!resp){
+    res.json({message:"no message"})
+  }
+
+  res.json(resp);
 }
