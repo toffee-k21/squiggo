@@ -8,66 +8,66 @@ import Canvas from './Canvas';
 
 const backend_url = config.backend_url;
 interface ChatProps {
-    id?: number,
-    type: string,
-    roomId: number,
-    message: string,
-    userId?: string
+  id?: number,
+  type: string,
+  roomId: number,
+  message: string,
+  userId?: string
 }
-const ChatRoom =  ({roomId}:{roomId: number}) => {
+const ChatRoom = ({ roomId }: { roomId: number }) => {
 
   const [chats, setChats] = useState<ChatProps[]>([]);
   const [chatMessage, setChatMessage] = useState<string>();
-  const {loading,socket} = useSocket();
+  const { loading, socket } = useSocket();
   const Id = roomId;
 
-      useEffect(()=>{
-        const handleFetchChats = async (id: number) => {
-          const token = document.cookie.split('; ')
-            .find(row => row.startsWith('token='))
-            ?.split('=')[1];
-          if(!token){
-            return;
-          }
-          const resp = await fetch(`${backend_url}/room/chat/${id}`, {
-            headers: {
-              authorization: `Bearer ${token}`
-            }
-          });
-          console.log(resp);
-          const data = await resp.json();
-          console.log("data",data)
-          setChats(data);
-         }
-
-        handleFetchChats(Id);
-      },[])
-
-      useEffect(()=>{
-        if (!socket) {
-          return;
+  useEffect(() => {
+    const handleFetchChats = async (id: number) => {
+      const token = document.cookie.split('; ')
+        .find(row => row.startsWith('token='))
+        ?.split('=')[1];
+      if (!token) {
+        return;
+      }
+      const resp = await fetch(`${backend_url}/room/chat/${id}`, {
+        headers: {
+          authorization: `Bearer ${token}`
         }
-        socket.send(JSON.stringify({
-          type: "join_room",
-          roomId: Id,
-          message: "joined room !"
-        }));
-        socket.onmessage = (event: MessageEvent) => {
-          try {
-            const message = JSON.parse(event.data);
-            console.log("Received:", message);
-            setChats((prev: ChatProps[] )=> [...prev, message]);
-          } catch (err) {
-            console.error("Invalid JSON from server:", event.data);
-          }
-        };
-        
-      },[socket, loading])
+      });
+      console.log(resp);
+      const data = await resp.json();
+      console.log("data", data)
+      setChats(data);
+    }
 
-      console.log(chats);
+    handleFetchChats(Id);
+  }, [])
 
-  const handleMsgEmit = () =>{
-    if(!chatMessage){
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+    socket.send(JSON.stringify({
+      type: "join_room",
+      roomId: Id,
+      message: "joined room !"
+    }));
+    socket.onmessage = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data);
+        console.log("Received:", message);
+        setChats((prev: ChatProps[]) => [...prev, message]);
+      } catch (err) {
+        console.error("Invalid JSON from server:", event.data);
+      }
+    };
+
+  }, [socket, loading])
+
+  console.log(chats);
+
+  const handleMsgEmit = () => {
+    if (!chatMessage) {
       return;
     }
     let data: ChatProps = {
@@ -80,16 +80,20 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
   }
 
   return (
-    <div>
-      <div>Stream your Sketch</div>
-      <Canvas />
-      {  
-        chats.map((chat:ChatProps)=>{
-         return <Chat key={chat.id} data={chat}/>
+    <div className='flex'>
+      <div>
+        <div className='absolute top-0'>Stream your Sketch</div>
+        <Canvas />
+      </div>
+      <div className='h-96 overflow-y-scroll'>
+      {
+        chats.map((chat: ChatProps) => {
+          return <Chat key={chat.id} data={chat} />
         })
       }
-      <input type='text' placeholder='type message here' onChange={(e)=>setChatMessage(e.target.value)}/>
+      <input type='text' placeholder='type message here' onChange={(e) => setChatMessage(e.target.value)} />
       <button onClick={handleMsgEmit}>send</button>
+      </div>
     </div>
   )
 }

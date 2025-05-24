@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useRef } from 'react'
 import { sketch } from '../draw/sketch';
 
@@ -12,7 +13,7 @@ const Canvas = () => {
     },[canvasRef])
   return (
     <div>
-          <canvas id="myCanvas" ref={canvasRef} height={500} width={1000} className='border-1 border-dashed border-gray-500 rounded-md shadow-lg'></canvas>
+          <canvas id="myCanvas" ref={canvasRef} width={1000} height={window.innerHeight} className='border-1 border-dashed border-gray-500 rounded-md shadow-lg'></canvas>
     </div>
   )
 }
