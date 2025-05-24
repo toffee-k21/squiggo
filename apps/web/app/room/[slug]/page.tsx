@@ -12,10 +12,15 @@ const RoomPage = async ({ params }: {
     
     const slugToId = async (slug: string) => {
         console.log(slug)
-        const resp = await fetch(`${backend_url}/room/${slug}`);
-        const data = await resp.json();
-        const roomId = data.roomId;
-        return roomId;
+        try{
+            const resp = await fetch(`${backend_url}/room/${slug}`);
+            const data = await resp.json();
+            const roomId = data.roomId;
+            return roomId;
+        }
+        catch(e){
+            console.log("Network issue !")
+        }
     }
 
     const p = await params;

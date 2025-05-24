@@ -9,6 +9,8 @@ export function useSocket(){
     const [socket, setSocket] = useState<WebSocket>();
 
     useEffect(() => {
+        try{
+        
         const token = document.cookie.split('; ')
             .find(row => row.startsWith('token='))?.split('=')[1];
         
@@ -24,6 +26,10 @@ export function useSocket(){
             setSocket(undefined);
             setLoading(true);
         };
+            
+    } catch(e) {
+    console.log("socket connection issue") //todo: make it alert
+    }
     }, []);
 
     return {

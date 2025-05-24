@@ -21,18 +21,23 @@ interface User {
 
 
 async function isRoomExists(a:number){
-  const room = await prisma.room.findUnique({
-    where:{id:a}
-  })
-  if(!room){
-    return false;
-  }else{
-    return true;
+  try {
+    const room = await prisma.room.findUnique({
+      where:{id:a}
+    })
+    if(!room){
+      return false;
+    }else{
+      return true;
+    }
+  } catch (e){
+    console.log(e);
   }
 }
 
 function authenticateUser(url:string){
-  try {const queryParam = new URLSearchParams(url?.split('?')[1]);
+  try {
+    const queryParam = new URLSearchParams(url?.split('?')[1]);
     const token = queryParam.get('token');
     if(!token){
       console.log("token not found"); //todo: write code -> send to client 

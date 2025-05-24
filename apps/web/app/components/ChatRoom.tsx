@@ -4,6 +4,7 @@ import Chat from './Chat'
 import config from '../utils.json';
 import { useSocket } from '../hooks/useSocket';
 import { useEffect, useState } from 'react';
+import Canvas from './Canvas';
 
 const backend_url = config.backend_url;
 interface ChatProps {
@@ -80,7 +81,8 @@ const ChatRoom =  ({roomId}:{roomId: number}) => {
 
   return (
     <div>
-      <div>ChatRoom</div>
+      <div>Stream your Sketch</div>
+      <Canvas />
       {  
         chats.map((chat:ChatProps)=>{
          return <Chat key={chat.id} data={chat}/>
