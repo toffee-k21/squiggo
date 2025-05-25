@@ -52,15 +52,20 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       roomId: Id,
       message: "joined room !"
     }));
-    socket.onmessage = (event: MessageEvent) => {
+    const handleMessage2 = (event: MessageEvent) => {
       try {
-        const message = JSON.parse(event.data);
-        console.log("Received:", message);
-        setChats((prev: ChatProps[]) => [...prev, message]);
+        const chat = JSON.parse(event.data);
+        if(chat.type="chat"){
+        console.log("Received:", chat);
+        setChats((prev: ChatProps[]) => [...prev, chat]);
+        }
       } catch (err) {
         console.error("Invalid JSON from server:", event.data);
       }
-    };
+    }
+    socket.addEventListener('message', handleMessage2);
+
+    // return socket.removeEventListener('message', handleMessage2);
 
   }, [socket, loading])
 
@@ -79,11 +84,11 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     setChats((prev: ChatProps[]) => [...prev, data]);
   }
 
-  return (
+  return socket ? (
     <div className='flex'>
       <div className=' border-r border-neutral-800 mr-1'>
         <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
-        <Canvas id={Id}/>
+        <Canvas id={Id} socket={socket}/>
       </div>
       <div className='h-screen overflow-y-scroll' style={{scrollbarWidth:"none"}}>
       {
@@ -97,7 +102,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       </div>
       </div>
     </div>
-  )
+  ) : (<div>loading...</div>)
 }
 
 export default ChatRoom;

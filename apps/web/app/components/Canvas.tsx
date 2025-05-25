@@ -4,6 +4,7 @@ import { sketch } from '../draw/sketch';
 import Image from 'next/image';
 import Link from 'next/link';
 import {backend_url} from '../utils.json';
+import { useSocket } from '../hooks/useSocket';
 
 interface Sketch {
   x: number,
@@ -20,7 +21,7 @@ interface ChatProps {
   userId?: string
 }
 
-const Canvas = ({id}:{id:number}) => {
+const Canvas = ({id,socket}:{id:number,socket:WebSocket}) => {
 
   async function fetchSketches(id:number){
     const token = document.cookie.split('; ')
@@ -43,17 +44,40 @@ const Canvas = ({id}:{id:number}) => {
     setSketchesList(crds);
   }
     console.log(id);
-    const [sketchesList, setSketchesList] = useState<Sketch[]>();
+    const [sketchesList, setSketchesList] = useState<Sketch[]>([]);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     useEffect(()=>{
-        fetchSketches(id);
-        const canvas = canvasRef.current;
-        if(canvas){
-          sketch(canvas, sketchesList!);
-        }
-   
-    }, [canvasRef, sketchesList])
+      fetchSketches(id);
+    },[])
+    useEffect(()=>{
+    
+         const canvas = canvasRef.current;
+         if(canvas){
+           sketch(canvas, sketchesList!, socket, id);
+         }
+    }, [canvasRef, sketchesList, socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleMessage = (event: MessageEvent) => {
+      const chat: ChatProps = JSON.parse(event.data);
+      if (chat.type = "chat") {
+      console.log("WebSocket message received");
+      const crds:Sketch = JSON.parse(chat.message);
+
+      // Update sketchesList with the new sketch data
+        setSketchesList((prev: Sketch[]) => [...prev, crds]);
+      }
+    };
+
+    socket.addEventListener("message", handleMessage);
+
+    return () => {
+      socket.removeEventListener("message", handleMessage);
+    };
+  }, [socket]);
+
   return (
     <div className='z-10'>
           <canvas id="myCanvas" ref={canvasRef} width={1000} height={window.innerHeight} className='rounded-md shadow-lg'></canvas>
