@@ -83,7 +83,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     <div className='flex'>
       <div className=' border-r border-neutral-800 mr-1'>
         <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
-        <Canvas />
+        <Canvas id={Id}/>
       </div>
       <div className='h-screen overflow-y-scroll' style={{scrollbarWidth:"none"}}>
       {

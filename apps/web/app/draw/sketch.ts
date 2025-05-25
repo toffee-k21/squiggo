@@ -1,8 +1,19 @@
-export const sketch = (canvas:HTMLCanvasElement ) =>{
+interface Sketch {
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+  }
+  
+export const sketch = (canvas:HTMLCanvasElement,sketchesList:Sketch[] ) =>{
     const ctx = canvas?.getContext("2d");
     if(!ctx){
         return;
     }
+    console.log("sklist",sketchesList)
+    sketchesList?.map((f)=>{
+return ctx.strokeRect(f.x,f.y,f.w,f.h);
+    })
     let size = canvas?.getBoundingClientRect(); 
     console.log(size);
     ctx.strokeStyle = "gray";
