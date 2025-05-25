@@ -81,18 +81,20 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
 
   return (
     <div className='flex'>
-      <div>
+      <div className=' border-r border-neutral-800 mr-1'>
         <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
         <Canvas />
       </div>
-      <div className='h-96 overflow-y-scroll'>
+      <div className='h-screen overflow-y-scroll' style={{scrollbarWidth:"none"}}>
       {
         chats.map((chat: ChatProps) => {
           return <Chat key={chat.id} data={chat} />
         })
       }
-      <input type='text' placeholder='type message here' onChange={(e) => setChatMessage(e.target.value)} />
-      <button className={"cursor-pointer"} onClick={handleMsgEmit}>send</button>
+      <div className='absolute bottom-5'>
+      <input className='p-2 ml-2' type='text' placeholder='Type your message...' onChange={(e) => setChatMessage(e.target.value)} />
+          <button className={"cursor-pointer bg-pink-500 m-1 p-2 border-2 border-pink-500 rounded-sm"} onClick={handleMsgEmit}>send</button>
+      </div>
       </div>
     </div>
   )

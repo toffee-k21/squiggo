@@ -11,7 +11,10 @@ interface ChatProps {
 }
 const Chat = ({data}: ChatProps) => {
   return (
-    <div key={data.id}>{data.message}</div>
+    <div className='m-2 mb-6'>
+      <div className='text-pink-500 bg-neutral-900 rounded-sm p-2'>{data.message}</div>
+      <div className='text-xs opacity-45' >@{data?.userId}</div>
+    </div>
   )
 }
 

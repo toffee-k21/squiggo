@@ -4,9 +4,11 @@ import Navbar from "./components/Navbar";
 export default function Home() {
 
   return (
-    <div className="px-7 md:px-[10%] my-44 ">
+    <div>
       <Navbar />
-      <InputBox />
+      <div className="px-7 md:px-[10%] my-44 ">
+        <InputBox />
+      </div>
     </div>
   );
 }
