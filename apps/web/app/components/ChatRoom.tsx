@@ -55,7 +55,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     const handleMessage2 = (event: MessageEvent) => {
  
         const chat = JSON.parse(event.data);
-        if(chat.type="chat"){
+        if(chat.type == "chat"){
         console.log("Received:", chat);
         setChats((prev: ChatProps[]) => [...prev, chat]);
         }
@@ -63,12 +63,12 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     }
     socket.addEventListener('message', handleMessage2);
 
-    return socket.removeEventListener('message', handleMessage2);
-    //  ?? why it works when i remove it ! it should be there for safty to avaoid multiple connection
+    return () => {
+      socket.removeEventListener('message', handleMessage2);
+    };
 
-  }, [socket, loading])
+  }, [socket])
 
-  console.log(chats);
 
   const handleMsgEmit = () => {
     if (!chatMessage) {
@@ -80,7 +80,6 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       message: chatMessage
     };
     socket?.send(JSON.stringify(data));
-    setChats((prev: ChatProps[]) => [...prev, data]);
   }
 
   return socket ? (

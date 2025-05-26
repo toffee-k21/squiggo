@@ -29,11 +29,11 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
           }
         });
         const data: ChatProps[] = await res.json();
-        console.log("data",data)
+
         const crds: Sketch[] = data?.map((x)=>{
           return JSON.parse(x.message);
         })
-        console.log("crds",crds)
+
         return crds;
       }
     const list:Sketch[]  = await fetchSketches(Id);
@@ -48,7 +48,6 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
     let realTimeSketch:Sketch[] = [];
     const handleMessage = (event: MessageEvent) => {
       const chat: ChatProps = JSON.parse(event.data);
-      console.log("chat",chat)
       if (chat.type == "sketch") {
         console.log("WebSocket message received");
         const crds:Sketch = JSON.parse(chat.message);
@@ -62,7 +61,6 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
 return ctx.strokeRect(f.x,f.y,f.w,f.h);
     })
     let size = canvas.getBoundingClientRect(); 
-    console.log(size);
     ctx.strokeStyle = "gray";
     let startX:number = 0;
     let startY:number = 0;

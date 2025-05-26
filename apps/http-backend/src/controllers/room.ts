@@ -51,9 +51,6 @@ export const showChats = async (req:Request,res:Response) =>{
     where :{
       roomId : roomId
     },
-     orderBy: {
-      id : "desc"
-     }, 
      take : 50
   })
   if(!resp){
