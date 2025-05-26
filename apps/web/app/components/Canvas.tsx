@@ -2,37 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { sketch } from '../draw/sketch';
 import Image from 'next/image';
 import Link from 'next/link';
-import {backend_url} from '../utils.json';
-import { useSocket } from '../hooks/useSocket';
-import { useSketchList } from '../hooks/useSketchList';
-
-interface Sketch {
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-}
-
-interface ChatProps {
-  id?: number,
-  type: string,
-  roomId: number,
-  message: string,
-  userId?: string
-}
-
-
 
 const Canvas = ({id,socket}:{id:number,socket:WebSocket}) => {
 
- 
-    console.log(id);
-    // const [sketchList, setSketchList] = useState<Sketch[]>([]);
-  // const { sketchList, setSketchList } = useSketchList();
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    // useEffect(()=>{
-    //   fetchSketches(id);
-    // },[])
+
     useEffect(()=>{
          const canvas = canvasRef.current;
          if(canvas){

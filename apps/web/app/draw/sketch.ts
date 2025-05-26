@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {backend_url} from '../utils.json';
 
 interface Sketch {
@@ -16,6 +15,7 @@ interface Sketch {
   }
   
 export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:number ) =>{
+
     async function fetchSketches(id:number) :Promise<Sketch[]>{
         const token = document.cookie.split('; ')
           .find(row => row.startsWith('token='))
@@ -36,7 +36,7 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
         console.log("crds",crds)
         return crds;
       }
-      const list:Sketch[]  = await fetchSketches(Id);
+    const list:Sketch[]  = await fetchSketches(Id);
 
     if(!canvas){
         return;
@@ -48,7 +48,8 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
     let realTimeSketch:Sketch[] = [];
     const handleMessage = (event: MessageEvent) => {
       const chat: ChatProps = JSON.parse(event.data);
-      if (chat.type = "sketch") {
+      console.log("chat",chat)
+      if (chat.type == "sketch") {
         console.log("WebSocket message received");
         const crds:Sketch = JSON.parse(chat.message);
         realTimeSketch.push(crds);
@@ -57,7 +58,6 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
     };
     socket.addEventListener("message", handleMessage);
   
-    // console.log("sklist",sketchesList)
     list?.map((f)=>{
 return ctx.strokeRect(f.x,f.y,f.w,f.h);
     })

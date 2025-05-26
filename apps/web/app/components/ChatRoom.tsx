@@ -53,15 +53,13 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       message: "joined room !"
     }));
     const handleMessage2 = (event: MessageEvent) => {
-      try {
+ 
         const chat = JSON.parse(event.data);
         if(chat.type="chat"){
         console.log("Received:", chat);
         setChats((prev: ChatProps[]) => [...prev, chat]);
         }
-      } catch (err) {
-        console.error("Invalid JSON from server:", event.data);
-      }
+  
     }
     socket.addEventListener('message', handleMessage2);
 
