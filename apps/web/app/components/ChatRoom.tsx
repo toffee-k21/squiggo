@@ -65,7 +65,8 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     }
     socket.addEventListener('message', handleMessage2);
 
-    // return socket.removeEventListener('message', handleMessage2);
+    return socket.removeEventListener('message', handleMessage2);
+    //  ?? why it works when i remove it ! it should be there for safty to avaoid multiple connection
 
   }, [socket, loading])
 
@@ -88,7 +89,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     <div className='flex'>
       <div className=' border-r border-neutral-800 mr-1'>
         <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
-        <Canvas id={Id} socket={socket}/>
+        <Canvas key={Id} id={Id} socket={socket}/>
       </div>
       <div className='h-screen overflow-y-scroll' style={{scrollbarWidth:"none"}}>
       {

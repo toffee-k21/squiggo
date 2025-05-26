@@ -1,3 +1,4 @@
 # 1. remove message reflection from ws backend; user should not get its message back when it send to room 
 # 2. join_room msg is saved in db ??? fix it - may be upr wale sahi hone s shi ho jyga
 # 3. const res = await() : todo - build and endpoint to check the user exixts or not in Auth.tsx
+# 4. why it works when we remove return satement from useffect it should be cleaned up(socket conection on handlemessage in ChatRoom.tsx)
