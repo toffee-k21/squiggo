@@ -3,7 +3,7 @@ import Chat from './Chat'
 // import { cookies } from 'next/headers';
 import config from '../utils.json';
 import { useSocket } from '../hooks/useSocket';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Canvas from './Canvas';
 
 const backend_url = config.backend_url;
@@ -20,6 +20,8 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
   const [chatMessage, setChatMessage] = useState<string>();
   const { loading, socket } = useSocket();
   const Id = roomId;
+
+  const joinedRef = useRef(false);
 
   useEffect(() => {
     const handleFetchChats = async (id: number) => {
@@ -44,14 +46,19 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
   }, [])
 
   useEffect(() => {
-    if (!socket) {
+    if (!socket || joinedRef.current) {
       return;
     }
+    
     socket.send(JSON.stringify({
       type: "join_room",
       roomId: Id,
       message: "joined room !"
     }));
+
+    joinedRef.current = true;
+    console.log("joinedRef.current")
+
     const handleMessage2 = (event: MessageEvent) => {
  
         const chat = JSON.parse(event.data);
@@ -91,7 +98,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       <div className='h-screen overflow-y-scroll' style={{scrollbarWidth:"none"}}>
       {
         chats.map((chat: ChatProps) => {
-          return <Chat key={chat.id} data={chat} />
+          return <Chat key={chat.id || Math.random()} data={chat} />
         })
       }
       <div className='absolute bottom-5'>
