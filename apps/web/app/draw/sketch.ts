@@ -36,7 +36,6 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
 
         return crds;
       }
-    const list:Sketch[]  = await fetchSketches(Id);
 
     if(!canvas){
         return;
@@ -45,7 +44,9 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
     if(!ctx){
         return;
     }
+
     let realTimeSketch:Sketch[] = [];
+
     const handleMessage = (event: MessageEvent) => {
       const chat: ChatProps = JSON.parse(event.data);
       if (chat.type == "sketch") {
@@ -56,10 +57,8 @@ export const sketch = async (canvas:HTMLCanvasElement, socket:WebSocket,Id:numbe
       }
     };
     socket.addEventListener("message", handleMessage);
-  
-    list?.map((f)=>{
-return ctx.strokeRect(f.x,f.y,f.w,f.h);
-    })
+
+
     let size = canvas.getBoundingClientRect(); 
     ctx.strokeStyle = "gray";
     let startX:number = 0;
@@ -67,30 +66,46 @@ return ctx.strokeRect(f.x,f.y,f.w,f.h);
     let sketch = false;
     let height:number;
     let width:number;
-    canvas?.addEventListener("mousedown",(e)=>{
-        sketch = true;
-        startX = e.clientX - size?.left!;
-        startY = e.clientY - size?.top!;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const list:Sketch[]  = await fetchSketches(Id);
+    list.map((f)=>{
+    return ctx.strokeRect(f.x,f.y,f.w,f.h);
     })
-    canvas.addEventListener("mouseup",(e)=>{
-        sketch = false;
-        const data = JSON.stringify({x:startX,y:startY,w:width,h:height});
-        socket.send(JSON.stringify({type:"sketch",message:data,roomId:Id}));
-    })
-    canvas.addEventListener("mousemove",(e)=>{
-        if(sketch){
-            let mouseX = e.clientX - size?.left!;
-            let mouseY = e.clientY - size?.top!;
-            height = mouseY - startY;
-            width  =  mouseX - startX;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeRect(startX, startY, width, height);
-            list.map((f)=>{
-                return ctx.strokeRect(f.x,f.y,f.w,f.h);
-            })
-            realTimeSketch.map((f)=>{
-                return ctx.strokeRect(f.x,f.y,f.w,f.h);
-            })
-        }
-    })
+    const handleMouseDown = (e: MouseEvent)=>{
+      sketch = true;
+      startX = e.clientX - size?.left!;
+      startY = e.clientY - size?.top!;
+    }
+    const handleMouseUp = (e: MouseEvent)=>{
+      sketch = false;
+      const data = JSON.stringify({x:startX,y:startY,w:width,h:height});
+      console.log("mouseup");
+      socket.send(JSON.stringify({type:"sketch",message:data,roomId:Id}));
+  }
+  const handleMouseMove = (e: MouseEvent)=>{
+    if(sketch){
+        let mouseX = e.clientX - size?.left!;
+        let mouseY = e.clientY - size?.top!;
+        height = mouseY - startY;
+        width = mouseX - startX;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeRect(startX, startY, width, height);
+        list.map((f)=>{
+            return ctx.strokeRect(f.x,f.y,f.w,f.h);
+        })
+        realTimeSketch.map((f)=>{
+            return ctx.strokeRect(f.x,f.y,f.w,f.h);
+        })
+    }
+  }
+    canvas?.addEventListener("mousedown",handleMouseDown);
+    canvas.addEventListener("mouseup",handleMouseUp);
+    canvas.addEventListener("mousemove",handleMouseMove);
+
+    return () => {
+      socket.removeEventListener("message", handleMessage);
+      canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+    };
 }

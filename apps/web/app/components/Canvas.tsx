@@ -6,12 +6,22 @@ import Link from 'next/link';
 const Canvas = ({id,socket}:{id:number,socket:WebSocket}) => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
+  const joinedRef = useRef(false);
 
     useEffect(()=>{
-         const canvas = canvasRef.current;
-         if(canvas){
-           sketch(canvas, socket, id);
-         }
+        const canvas = canvasRef.current;
+      let cleanup: () => void | undefined;
+      if(joinedRef.current)return;
+        if(canvas ){
+          sketch(canvas, socket, id).then(res => {
+            // @ts-ignore
+            cleanup = res;
+          });
+        }
+      joinedRef.current = true;
+      return () => {
+        if (cleanup) cleanup();
+        };
     }, []);
 
 
