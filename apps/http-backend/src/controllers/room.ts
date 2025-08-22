@@ -1,95 +1,86 @@
-import { Request, Response } from "express"
-
-// import { CreateRoomSchema } from "@repo/common/valid"
-import { prisma } from "@repo/db/prima"
+import { Request, Response } from 'express';
+import { prisma } from '@repo/db/prima';
 
 interface RequestExtend extends Request {
-userId : string
+  userId: string;
 }
 
-
-export const createRoomHandler = async (Req:Request, res:Response) =>{
-  //  const data = CreateRoomSchema.safeParse(req.body);
-  //  if(!data.success){
-  //    res.json("input validation error")
-  //  }
+export const createRoomHandler = async (Req: Request, res: Response) => {
   const req = Req as RequestExtend;
 
   const u = await prisma.user.findUnique({
-    where: { id: req.userId }
+    where: { id: req.userId },
   });
 
   if (!u) {
-    res.status(400).json({ error: "User does not exist" });
+    res.status(400).json({ error: 'User does not exist' });
     return;
   }
-   
-try{
-  
-  console.log(req.userId)
-  const resp = await prisma.room.create({
-    data:{
-      slug: req.body.slug,
-      adminId: req.userId
+
+  try {
+    console.log(req.userId);
+    const resp = await prisma.room.create({
+      data: {
+        slug: req.body.slug,
+        adminId: req.userId,
+      },
+    });
+
+    if (!resp) {
+      return;
     }
-  })
 
-  if(!resp){
-    return;
+    res.json({ room: resp.id });
+  } catch (e) {
+    res.json({ error: 'error : ' + e });
   }
+};
 
-  res.json({room: resp.id});
-}
-  catch(e){
-    res.json({error:"error : "+e})
-  }
-}
-
-export const showChats = async (req:Request,res:Response) =>{
+export const showChats = async (req: Request, res: Response) => {
   const roomId = Number(req.params.roomId);
   const resp = await prisma.chat.findMany({
-    where :{
-      roomId : roomId
+    where: {
+      roomId: roomId,
     },
-     take : 50
-  })
-  if(!resp){
-    res.json({message:"no message"})
+    take: 50,
+  });
+  if (!resp) {
+    res.json({ message: 'no message' });
   }
 
   res.json(resp);
-}
+};
 
-export const slugToId = async (req:Request,res:Response) =>{
+export const slugToId = async (req: Request, res: Response) => {
   const slug = req.params.slug;
-const room = await prisma.room.findFirst({
-  where:{
-    slug:  slug
+  const room = await prisma.room.findFirst({
+    where: {
+      slug: slug,
+    },
+  });
+
+  if (!room) {
+    res.json({ message: 'error' });
+    return;
   }
-})
 
-if(!room){
-  res.json({message:"error"})
-  return;
-}
+  res.json({ roomId: room.id });
+};
 
-res.json({roomId:room.id});
-}
-
-export const showSketches = async (req:Request, res:Response ) =>{
+export const showSketches = async (req: Request, res: Response) => {
   const roomId = Number(req.params.roomId);
   const resp = await prisma.sketch.findMany({
-    where :{
-      roomId : roomId
+    where: {
+      roomId: roomId,
     },
-     orderBy: {
-      id : "desc"
-     }, 
-     take : 50
-  })
-  if(!resp){
-    res.json({message:"no message"})
+    orderBy: {
+      id: 'desc',
+    },
+    take: 50,
+  });
+  if (!resp) {
+    res.json({ message: 'no message' });
   }
 
   res.json(resp);
-}
+};

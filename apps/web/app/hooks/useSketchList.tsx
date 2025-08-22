@@ -9,7 +9,7 @@ interface Sketch {
   h: number,
 }
 interface SketchContextType {
-  sketchList : Sketch[];
+  sketchList: Sketch[];
   setSketchList: React.Dispatch<React.SetStateAction<Sketch[]>>;
 }
 

@@ -51,7 +51,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     if (!socket || joinedRef.current) {
       return;
     }
-    
+
     socket.send(JSON.stringify({
       type: "join_room",
       roomId: Id,
@@ -62,11 +62,11 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     console.log("joinedRef.current")
 
     const handleMessage2 = (event: MessageEvent) => {
-        const chat = JSON.parse(event.data);
-        if(chat.type == "chat"){
+      const chat = JSON.parse(event.data);
+      if (chat.type == "chat") {
         console.log("Received:", chat);
         setChats((prev: ChatProps[]) => [...prev, chat]);
-        }
+      }
     }
     socket.addEventListener('message', handleMessage2);
 
@@ -100,18 +100,18 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     <div className='flex'>
       <div className=' border-r border-neutral-800 mr-1'>
         <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
-        <Canvas key={Id} id={Id} socket={socket}/>
+        <Canvas key={Id} id={Id} socket={socket} />
       </div>
-      <div className='h-screen overflow-y-scroll pb-[5%]' ref={containerRef} style={{scrollbarWidth:"none"}}>
-      {
-        chats.map((chat: ChatProps) => {
-          return <Chat key={chat.id || Math.random()} data={chat} />
-        })
-      }
-      <div className='absolute bottom-5'>
-      <input className='p-2 ml-2 bg-neutral-800' type='text' placeholder='Type your message...' onChange={(e) => setChatMessage(e.target.value)} />
+      <div className='h-screen overflow-y-scroll pb-[5%]' ref={containerRef} style={{ scrollbarWidth: "none" }}>
+        {
+          chats.map((chat: ChatProps) => {
+            return <Chat key={chat.id || Math.random()} data={chat} />
+          })
+        }
+        <div className='absolute bottom-5'>
+          <input className='p-2 ml-2 bg-neutral-800' type='text' placeholder='Type your message...' onChange={(e) => setChatMessage(e.target.value)} />
           <button className={"cursor-pointer bg-pink-500 m-1 p-3 border-[0.4]border-pink-500 rounded-sm"} onClick={handleMsgEmit}> <FiSend /></button>
-      </div>
+        </div>
       </div>
     </div>
   ) : (<div>loading...</div>)

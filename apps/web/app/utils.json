@@ -1,4 +1,4 @@
 {
-    "backend_url" : "http://localhost:3001",
-    "WS_URL":"ws://localhost:8080/"
+  "backend_url": "http://localhost:3001",
+  "WS_URL": "ws://localhost:8080/"
 }
