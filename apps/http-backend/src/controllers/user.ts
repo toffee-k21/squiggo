@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/common-backend/config';
 import { CreateUserSchema, SigninSchema } from '@repo/common/valid';
-import { prisma } from '@repo/db/prima';
+import { prisma } from '@repo/db/prisma';
 
 export const signinHandler = async (req: Request, res: Response) => {
   const email = req.body.email;

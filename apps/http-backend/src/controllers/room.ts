@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { prisma } from '@repo/db/prima';
+import { prisma } from '@repo/db/prisma';
 
 interface RequestExtend extends Request {
   userId: string;

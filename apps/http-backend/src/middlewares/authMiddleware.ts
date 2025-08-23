@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/common-backend/config';
 import { NextFunction, Request, Response } from 'express';
-import { prisma } from '@repo/db/prima';
+import { prisma } from '@repo/db/prisma';
 
 export const authMiddleware = async (
   req: Request,
