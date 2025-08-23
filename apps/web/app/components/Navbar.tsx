@@ -1,7 +1,7 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
-import { FiLogIn, FiUserPlus } from 'react-icons/fi'
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { FiUserPlus } from "react-icons/fi";
 
 const Navbar = () => {
     return (
@@ -9,8 +9,8 @@ const Navbar = () => {
             <div className='px-7 md:px-[10%] my-4 flex absolute top-0 font-semibold text-md items-center gap-x-193'>
                 <div className='flex justify-center items-center'>
                     <Image className='mr-4' width={40} height={40} src="/images/sketch_stream_logo.png" alt="logo" />
-                    <div className='text-pink-500 '><Link href={'/'}>Sketch_Stream{" "}</Link></div> {" "}
-                    <div className='text-gray-500'><Link href={'/'}>/Devs</Link></div>
+                    <div className='text-pink-500 '><Link href={"/"}>Sketch_Stream{" "}</Link></div> {" "}
+                    <div className='text-gray-500'><Link href={"/"}>/Devs</Link></div>
                 </div>
                 <div className='flex'>
                     {/* <FiLogIn size={24} className="text-gray-400 hover:text-pink-500 transition mr-4" /> */}
@@ -21,7 +21,7 @@ const Navbar = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

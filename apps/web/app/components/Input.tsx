@@ -1,5 +1,5 @@
-'use client'
-import React from 'react'
+"use client";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ const InputBox = () => {
                 router.push(`room/${slug}`);
             }}>join</button>
         </div>
-    )
-}
+    );
+};
 
-export default InputBox
+export default InputBox;

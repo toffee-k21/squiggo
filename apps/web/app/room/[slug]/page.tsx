@@ -1,6 +1,6 @@
-import React from 'react';
-import config from '../../utils.json';
-import ChatRoom from '../../components/ChatRoom';
+import React from "react";
+import config from "../../utils.json";
+import ChatRoom from "../../components/ChatRoom";
 
 const backend_url = config.backend_url;
 
@@ -11,7 +11,7 @@ const RoomPage = async ({ params }: {
 }) => {
 
     const slugToId = async (slug: string) => {
-        console.log(slug)
+        console.log(slug);
         try {
             const resp = await fetch(`${backend_url}/room/${slug}`);
             const data = await resp.json();
@@ -19,9 +19,9 @@ const RoomPage = async ({ params }: {
             return roomId;
         }
         catch (e) {
-            console.log("Network issue !")
+            console.log("Network issue !", e);
         }
-    }
+    };
 
     const p = await params;
     const slug = p.slug;
@@ -31,7 +31,7 @@ const RoomPage = async ({ params }: {
         <div>
             <ChatRoom roomId={roomId} />
         </div>
-    )
-}
+    );
+};
 
-export default RoomPage
+export default RoomPage;

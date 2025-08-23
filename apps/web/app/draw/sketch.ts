@@ -1,4 +1,4 @@
-import { backend_url } from '../utils.json';
+import { backend_url } from "../utils.json";
 
 interface Sketch {
   x: number;
@@ -21,9 +21,9 @@ export const sketch = async (
 ) => {
   async function fetchSketches(id: number): Promise<Sketch[]> {
     const token = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('token='))
-      ?.split('=')[1];
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
     if (!token) {
       return [];
     }
@@ -44,26 +44,26 @@ export const sketch = async (
   if (!canvas) {
     return;
   }
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   if (!ctx) {
     return;
   }
 
-  let realTimeSketch: Sketch[] = [];
+  const realTimeSketch: Sketch[] = [];
 
   const handleMessage = (event: MessageEvent) => {
     const chat: ChatProps = JSON.parse(event.data);
-    if (chat.type == 'sketch') {
-      console.log('WebSocket message received');
+    if (chat.type == "sketch") {
+      console.log("WebSocket message received");
       const crds: Sketch = JSON.parse(chat.message);
       realTimeSketch.push(crds);
       ctx.strokeRect(crds.x, crds.y, crds.w, crds.h);
     }
   };
-  socket.addEventListener('message', handleMessage);
+  socket.addEventListener("message", handleMessage);
 
-  let size = canvas.getBoundingClientRect();
-  ctx.strokeStyle = 'gray';
+  const size = canvas.getBoundingClientRect();
+  ctx.strokeStyle = "gray";
   let startX: number = 0;
   let startY: number = 0;
   let sketch = false;
@@ -76,19 +76,19 @@ export const sketch = async (
   });
   const handleMouseDown = (e: MouseEvent) => {
     sketch = true;
-    startX = e.clientX - size?.left!;
-    startY = e.clientY - size?.top!;
+    startX = e.clientX - size.left!;
+    startY = e.clientY - size.top!;
   };
-  const handleMouseUp = (e: MouseEvent) => {
+  const handleMouseUp = () => {
     sketch = false;
     const data = JSON.stringify({ x: startX, y: startY, w: width, h: height });
-    console.log('mouseup');
-    socket.send(JSON.stringify({ type: 'sketch', message: data, roomId: Id }));
+    console.log("mouseup");
+    socket.send(JSON.stringify({ type: "sketch", message: data, roomId: Id }));
   };
   const handleMouseMove = (e: MouseEvent) => {
     if (sketch) {
-      let mouseX = e.clientX - size?.left!;
-      let mouseY = e.clientY - size?.top!;
+      const mouseX = e.clientX - size.left!;
+      const mouseY = e.clientY - size.top!;
       height = mouseY - startY;
       width = mouseX - startX;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -101,14 +101,14 @@ export const sketch = async (
       });
     }
   };
-  canvas?.addEventListener('mousedown', handleMouseDown);
-  canvas.addEventListener('mouseup', handleMouseUp);
-  canvas.addEventListener('mousemove', handleMouseMove);
+  canvas?.addEventListener("mousedown", handleMouseDown);
+  canvas.addEventListener("mouseup", handleMouseUp);
+  canvas.addEventListener("mousemove", handleMouseMove);
 
   return () => {
-    socket.removeEventListener('message', handleMessage);
-    canvas.removeEventListener('mouseup', handleMouseUp);
-    canvas.removeEventListener('mousedown', handleMouseDown);
-    canvas.removeEventListener('mousemove', handleMouseMove);
+    socket.removeEventListener("message", handleMessage);
+    canvas.removeEventListener("mouseup", handleMouseUp);
+    canvas.removeEventListener("mousedown", handleMouseDown);
+    canvas.removeEventListener("mousemove", handleMouseMove);
   };
 };

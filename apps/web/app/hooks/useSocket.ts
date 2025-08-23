@@ -1,6 +1,6 @@
-`use client`;
-import { useEffect, useState } from 'react';
-import config from '../utils.json';
+"use client";
+import { useEffect, useState } from "react";
+import config from "../utils.json";
 
 const WS_URL = config.WS_URL;
 
@@ -11,9 +11,9 @@ export function useSocket() {
   useEffect(() => {
     try {
       const token = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('token='))
-        ?.split('=')[1];
+        .split("; ")
+        .find((row) => row.startsWith("token="))
+        ?.split("=")[1];
 
       const ws = new WebSocket(`${WS_URL}?token=${token}`);
 
@@ -28,7 +28,7 @@ export function useSocket() {
         setLoading(true);
       };
     } catch (e) {
-      console.log('socket connection issue'); //todo: make it alert
+      console.log("socket connection issue", e); //todo: make it alert
     }
   }, []);
 

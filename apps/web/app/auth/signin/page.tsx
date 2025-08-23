@@ -1,8 +1,8 @@
-'use client'
-import React, { useRef } from 'react'
-import { backend_url } from '../../utils.json'
-import Navbar from '../../components/Navbar';
-import Link from 'next/link';
+"use client";
+import React, { useRef } from "react";
+import { backend_url } from "../../utils.json";
+import Navbar from "../../components/Navbar";
+import Link from "next/link";
 
 const SignIn = () => {
     const emailRef = useRef<HTMLInputElement>(null);
@@ -14,13 +14,13 @@ const SignIn = () => {
         const res = await fetch(`${backend_url}/signin`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({ email, password })
-        })
+        });
         const token = await res.json();
-        document.cookie = `token=${token}; path=/; max-age=2592000`
-    }
+        document.cookie = `token=${token}; path=/; max-age=2592000`;
+    };
     return (
         <div>
             <Navbar />
@@ -48,7 +48,7 @@ const SignIn = () => {
             </div>
         </div>
 
-    )
-}
+    );
+};
 
-export default SignIn
+export default SignIn;

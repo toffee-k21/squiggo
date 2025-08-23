@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 interface ChatProps {
   data: {
@@ -15,7 +15,7 @@ const Chat = ({ data }: ChatProps) => {
       <div className='text-pink-500 bg-neutral-900 rounded-sm p-2'>{data.message}</div>
       <div className='text-xs opacity-45' >@{data?.userId}</div>
     </div>
-  )
-}
+  );
+};
 
-export default Chat
+export default Chat;

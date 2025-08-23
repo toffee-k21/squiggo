@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface Sketch {
   x: number,
@@ -27,6 +27,6 @@ export const SketchProvider = ({ children }: { children: ReactNode }) => {
 
 export const useSketchList = () => {
   const context = useContext(SketchContext);
-  if (!context) throw new Error('useSketchList must be used within a SketchProvider');
+  if (!context) throw new Error("useSketchList must be used within a SketchProvider");
   return context;
 };

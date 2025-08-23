@@ -1,11 +1,11 @@
-'use client'
-import Chat from './Chat'
+"use client";
+import Chat from "./Chat";
 // import { cookies } from 'next/headers';
-import config from '../utils.json';
-import { useSocket } from '../hooks/useSocket';
-import { useEffect, useRef, useState } from 'react';
-import Canvas from './Canvas';
-import { FiSend } from 'react-icons/fi';
+import config from "../utils.json";
+import { useSocket } from "../hooks/useSocket";
+import { useEffect, useRef, useState } from "react";
+import Canvas from "./Canvas";
+import { FiSend } from "react-icons/fi";
 
 const backend_url = config.backend_url;
 interface ChatProps {
@@ -19,7 +19,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
 
   const [chats, setChats] = useState<ChatProps[]>([]);
   const [chatMessage, setChatMessage] = useState<string>();
-  const { loading, socket } = useSocket();
+  const { socket } = useSocket();
   const Id = roomId;
 
   const joinedRef = useRef(false);
@@ -27,9 +27,9 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
 
   useEffect(() => {
     const handleFetchChats = async (id: number) => {
-      const token = document.cookie.split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
+      const token = document.cookie.split("; ")
+        .find(row => row.startsWith("token="))
+        ?.split("=")[1];
       if (!token) {
         return;
       }
@@ -40,12 +40,12 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       });
       console.log(resp);
       const data = await resp.json();
-      console.log("data", data)
+      console.log("data", data);
       setChats(data);
-    }
+    };
 
     handleFetchChats(Id);
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!socket || joinedRef.current) {
@@ -59,7 +59,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     }));
 
     joinedRef.current = true;
-    console.log("joinedRef.current")
+    console.log("joinedRef.current");
 
     const handleMessage2 = (event: MessageEvent) => {
       const chat = JSON.parse(event.data);
@@ -67,14 +67,14 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
         console.log("Received:", chat);
         setChats((prev: ChatProps[]) => [...prev, chat]);
       }
-    }
-    socket.addEventListener('message', handleMessage2);
+    };
+    socket.addEventListener("message", handleMessage2);
 
     return () => {
-      socket.removeEventListener('message', handleMessage2);
+      socket.removeEventListener("message", handleMessage2);
     };
 
-  }, [socket])
+  }, [socket]);
 
   useEffect(() => {
     // bottom-scroll func
@@ -88,13 +88,13 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
     if (!chatMessage) {
       return;
     }
-    let data: ChatProps = {
+    const data: ChatProps = {
       type: "chat",
       roomId: Id,
       message: chatMessage
     };
     socket?.send(JSON.stringify(data));
-  }
+  };
 
   return socket ? (
     <div className='flex'>
@@ -105,7 +105,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       <div className='h-screen overflow-y-scroll pb-[5%]' ref={containerRef} style={{ scrollbarWidth: "none" }}>
         {
           chats.map((chat: ChatProps) => {
-            return <Chat key={chat.id || Math.random()} data={chat} />
+            return <Chat key={chat.id || Math.random()} data={chat} />;
           })
         }
         <div className='absolute bottom-5'>
@@ -114,7 +114,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
         </div>
       </div>
     </div>
-  ) : (<div>loading...</div>)
-}
+  ) : (<div>loading...</div>);
+};
 
 export default ChatRoom;

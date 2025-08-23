@@ -1,11 +1,11 @@
-import React from 'react'
-import { jwtDecode } from 'jwt-decode';
-import { useRouter } from 'next/router';
+import React from "react";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/router";
 
 function useAuth() {
-  const token = document.cookie.split('; ')
-    .find(row => row.startsWith('token='))
-    ?.split('=')[1];
+  const token = document.cookie.split("; ")
+    .find(row => row.startsWith("token="))
+    ?.split("=")[1];
   if (!token) {
     return null;
   }
@@ -18,14 +18,14 @@ const Auth = ({ children }: {
   children: React.ReactNode;
 }) => {
   const router = useRouter();
-  const id = useAuth()
+  const id = useAuth();
   if (!id) {
-    router.push('/auth/login')
+    router.push("/auth/login");
     return;
   }
   return (
     <div>{children}</div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

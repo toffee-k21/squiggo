@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { sketch } from '../draw/sketch';
-import Image from 'next/image';
-import Link from 'next/link';
+import React, { useEffect, useRef } from "react";
+import { sketch } from "../draw/sketch";
+import Image from "next/image";
+import Link from "next/link";
 
 const Canvas = ({ id, socket }: { id: number, socket: WebSocket }) => {
 
@@ -14,7 +14,7 @@ const Canvas = ({ id, socket }: { id: number, socket: WebSocket }) => {
     if (joinedRef.current) return;
     if (canvas) {
       sketch(canvas, socket, id).then(res => {
-        // @ts-ignore
+        // @ts-expect-error solve this error later 
         cleanup = res;
       });
     }
@@ -32,7 +32,7 @@ const Canvas = ({ id, socket }: { id: number, socket: WebSocket }) => {
         <Link href={"/"}><Image className='mr-4' width={40} height={40} src="/images/sketch_stream_logo.png" alt="logo" /></Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Canvas
+export default Canvas;
