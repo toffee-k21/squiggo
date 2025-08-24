@@ -6,6 +6,7 @@ import { useSocket } from "../hooks/useSocket";
 import { useEffect, useRef, useState } from "react";
 import Canvas from "./Canvas";
 import { FiSend } from "react-icons/fi";
+import { redirect } from "next/navigation";
 
 const backend_url = config.backend_url;
 interface ChatProps {
@@ -30,8 +31,13 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
       const token = document.cookie.split("; ")
         .find(row => row.startsWith("token="))
         ?.split("=")[1];
+      if (!id) {
+        alert("check your room slug !")
+        redirect("/");
+      }
       if (!token) {
-        return;
+        alert("not authenticated !");
+        redirect("/");
       }
       const resp = await fetch(`${backend_url}/room/chat/${id}`, {
         headers: {
