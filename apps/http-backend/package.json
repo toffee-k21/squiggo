@@ -12,6 +12,7 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "@repo/eslint-config":"workspace:*",
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
     "@types/cors": "^2.8.18"
