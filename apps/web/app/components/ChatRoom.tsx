@@ -1,12 +1,11 @@
 "use client";
 import Chat from "./Chat";
-// import { cookies } from 'next/headers';
 import config from "../utils.json";
 import { useSocket } from "../hooks/useSocket";
 import { useEffect, useRef, useState } from "react";
 import Canvas from "./Canvas";
 import { FiSend } from "react-icons/fi";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 
 const backend_url = config.backend_url;
 interface ChatProps {
@@ -22,6 +21,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
   const [chatMessage, setChatMessage] = useState<string>();
   const { socket } = useSocket();
   const Id = roomId;
+  const router = useRouter();
 
   const joinedRef = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -33,11 +33,11 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
         ?.split("=")[1];
       if (!id) {
         alert("check your room slug !")
-        redirect("/");
+        router.push("/");
       }
       if (!token) {
         alert("not authenticated !");
-        redirect("/");
+        router.push("/");
       }
       const resp = await fetch(`${backend_url}/room/chat/${id}`, {
         headers: {
