@@ -3,10 +3,12 @@ import React, { useRef } from "react";
 import { backend_url } from "../../utils.json";
 import Navbar from "../../components/Navbar";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const email = emailRef.current?.value;
@@ -20,6 +22,13 @@ const SignIn = () => {
         });
         const token = await res.json();
         document.cookie = `token=${token}; path=/; max-age=2592000`;
+        if (typeof token == "string") {
+            document.cookie = `token=${token}; path=/; max-age=2592000`;
+            router.push("/");
+            alert("Authorized !")
+        } else {
+            alert("Invalid User !")
+        };
     };
     return (
         <div>

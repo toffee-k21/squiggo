@@ -26,6 +26,7 @@ const SignUp = () => {
         if (typeof token == "string") {
             document.cookie = `token=${token}; path=/; max-age=2592000`;
             router.push("/");
+            alert("Authorized !")
         } else {
             alert("Invalid User !")
         };
