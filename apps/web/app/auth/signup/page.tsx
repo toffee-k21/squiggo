@@ -3,11 +3,13 @@ import React, { useRef } from "react";
 import { backend_url } from "../../utils.json";
 import Navbar from "../../components/Navbar";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const usernameRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const email = emailRef.current?.value;
@@ -21,7 +23,12 @@ const SignUp = () => {
             body: JSON.stringify({ email, password, username })
         });
         const token = await res.json();
-        document.cookie = `token=${token}; path=/; max-age=2592000`;
+        if (typeof token == "string") {
+            document.cookie = `token=${token}; path=/; max-age=2592000`;
+            router.push("/");
+        } else {
+            alert("Invalid User !")
+        };
     };
     return (
         <div>
@@ -32,7 +39,7 @@ const SignUp = () => {
                     <div className="text-sm font-normal mb-4 text-center text-gray-500">Sign up your account</div>
                     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                         <div className="block relative">
-                            <label className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">Email</label>
+                            <label className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">Username</label>
                             <input type="text" ref={usernameRef} id="username" className="rounded border border-gray-200 text-sm w-full font-normal leading-[18px] text-black tracking-[0px] appearance-none block h-11 m-0 p-[11px] focus:ring-2 ring-offset-2  ring-gray-900 outline-0" />
 
                         </div>

@@ -23,7 +23,6 @@ export const signinHandler = async (req: Request, res: Response) => {
 
 export const signupHandler = async (req: Request, res: Response) => {
   let user;
-  console.log("prisma",prisma);
   try {
     user = await prisma.user.create({
       data: req.body,
