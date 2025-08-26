@@ -36,7 +36,7 @@ const SignUp = () => {
             <Navbar />
             <div className='flex justify-center items-center mt-20'>
                 <div className="max-w-md relative flex flex-col p-4 rounded-md text-black bg-neutral-900">
-                    <div className="text-2xl font-bold mb-2 text-pink-700 text-center">Welcome to <span className="text-pink-500">Sketch_Stream</span></div>
+                    <div className="text-2xl font-bold mb-2 text-pink-700 text-center">Welcome to <span className="text-pink-500">Squiggo</span></div>
                     <div className="text-sm font-normal mb-4 text-center text-gray-500">Sign up your account</div>
                     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                         <div className="block relative">
