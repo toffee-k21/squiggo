@@ -23,7 +23,9 @@ Grab your friends, test your doodling skills, and guess what’s being drawn in 
 
 ## 📦 Installation
 
-Clone the repo:
+Clone the repo & join the phase of building it your own way:
 ```bash
 git clone https://github.com/toffee-k21/squiggo.git
 cd squiggo
+
+

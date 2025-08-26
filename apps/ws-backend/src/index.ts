@@ -4,21 +4,11 @@ import {JWT_SECRET} from "@repo/common-backend/config"
 import {prisma} from "@repo/db/prisma"
 const wss = new WebSocketServer({ port: 8080 });
 
-
 interface User {
   userId: String,
   rooms : String[], // ids are stored
   ws: WebSocket
 }
-
-// model Chat {
-//   id      Int   
-//   type    String
-//   roomId  Int
-//   message String
-//   userId  String
-// }
-
 
 async function isRoomExists(a:number){
   try {
