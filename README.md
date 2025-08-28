@@ -1,5 +1,8 @@
 # ✏️ Squiggo 🎨
-![Fun !](apps/web/public/images/squiggo_logo.png)
+
+<p align="center">
+  <img src="apps/web/public/images/squiggo_logo.png" alt="Fun !" width="50%">
+</p>
 
 Welcome to **Squiggo** – a multiplayer drawing & guessing game built during the building phase.  
 Grab your friends, test your doodling skills, and guess what’s being drawn in real-time! 🖌️
