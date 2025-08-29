@@ -1,1 +1,1 @@
-{"root":["./src/auth.ts","./src/handlers.ts","./src/index.ts","./src/server.ts","./src/state.ts","./src/utils.ts"],"version":"5.8.2"}
+{"root":["./src/index.ts","./src/config/prisma.ts","./src/config/redis.ts","./src/services/messageService.ts","./src/services/roomService.ts","./src/utils/auth.ts","./src/utils/room.ts","./src/ws/handlers.ts","./src/ws/server.ts"],"version":"5.8.2"}

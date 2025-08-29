@@ -1,4 +1,8 @@
 import { createClient, RedisClientType } from "redis";
+import path from "path";
+import dotenv from "dotenv";
+
+dotenv.config({path: path.resolve(__dirname, "../../.env")});
 
 export const pub: RedisClientType = createClient({
     username: 'default',
@@ -24,5 +28,5 @@ export const sub:RedisClientType = createClient({
   export async function initRedis() {
     await pub.connect();
     await sub.connect();
-    console.log("✅ Redis connected");
+    console.log("Redis connected !");
   }

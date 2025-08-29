@@ -1,11 +1,12 @@
 import { initRedis } from "./config/redis"
 import { initWSServer } from "./ws/server";
-import dotenv from "dotenv";
-dotenv.config();
+
+const PORT = 8080;
 
 const start = async () => {
     await initRedis();
-    initWSServer(8080);
+    initWSServer(PORT);
+    console.log("WebSocket server started at :",PORT);
 }
 
 start();
