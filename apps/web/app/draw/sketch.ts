@@ -19,7 +19,7 @@ export const sketch = async (
   socket: WebSocket,
   Id: number
 ) => {
-  async function fetchSketches(id: number): Promise<Sketch[]> {
+  async function fetchSketches(id: number): Promise<Sketch[] | undefined> {
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("token="))
@@ -32,13 +32,14 @@ export const sketch = async (
         authorization: `Bearer ${token}`,
       },
     });
-    const data: ChatProps[] = await res.json();
-
-    const crds: Sketch[] = data?.map((x) => {
-      return JSON.parse(x.message);
-    });
-
-    return crds;
+    const data: ChatProps[] | undefined = await res.json();
+    if(data){
+      console.log("res",data);
+      const crds: Sketch[] = data?.map((x) => {
+        return JSON.parse(x.message);
+      });
+      return crds;
+    }
   }
 
   if (!canvas) {
@@ -70,8 +71,8 @@ export const sketch = async (
   let height: number;
   let width: number;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const list: Sketch[] = await fetchSketches(Id);
-  list.map((f) => {
+  const list: Sketch[] | undefined = await fetchSketches(Id);
+  list?.map((f) => {
     return ctx.strokeRect(f.x, f.y, f.w, f.h);
   });
   const handleMouseDown = (e: MouseEvent) => {
@@ -93,7 +94,7 @@ export const sketch = async (
       width = mouseX - startX;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeRect(startX, startY, width, height);
-      list.map((f) => {
+      list?.map((f) => {
         return ctx.strokeRect(f.x, f.y, f.w, f.h);
       });
       realTimeSketch.map((f) => {

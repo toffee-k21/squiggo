@@ -6,7 +6,7 @@ const PORT = 8080;
 const start = async () => {
     await initRedis();
     initWSServer(PORT);
-    console.log("WebSocket server started at :",PORT);
+    console.log("WebSocket server started at :", PORT);
 }
 
 start();

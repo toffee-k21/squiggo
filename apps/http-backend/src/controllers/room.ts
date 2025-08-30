@@ -78,9 +78,9 @@ export const showSketches = async (req: Request, res: Response) => {
     },
     take: 50,
   });
-  if (!resp) {
-    res.json({ message: 'no message' });
+  if(!resp){
+    res.json({error:"Error occured in Db connection"});
   }
-
   res.json(resp);
+  return;
 };
