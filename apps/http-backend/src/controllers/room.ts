@@ -36,7 +36,7 @@ export const createRoomHandler = async (Req: Request, res: Response) => {
   }
 };
 
-export const showChats = async (req: Request, res: Response) => {
+export const getOngoingGameChats = async (req: Request, res: Response) => {
   const roomId = Number(req.params.roomId);
   const resp = await prisma.chat.findMany({
     where: {

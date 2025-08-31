@@ -1,4 +1,4 @@
-import { initRedis } from "./config/redis"
+import { initRedis } from "@repo/redis-client"
 import { initWSServer } from "./ws/server";
 
 const PORT = 8080;

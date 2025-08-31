@@ -1,5 +1,5 @@
 import { WebSocket, WebSocketServer } from 'ws';
-import { pub, sub } from '../config/redis';
+import { pub, sub } from "@repo/redis-client";
 import { authenticateUser } from '../utils/auth';
 import { handleMessage } from './handlers';
 
