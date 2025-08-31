@@ -24,7 +24,8 @@
     "@types/jsonwebtoken": "^9.0.9",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "@repo/redis-client": "workspace:*"
   },
   "license": "ISC"
 }

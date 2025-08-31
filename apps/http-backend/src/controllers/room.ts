@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '@repo/db/prisma';
+import {pub} from "@repo/redis-client";
 
 interface RequestExtend extends Request {
   userId: string;
@@ -14,7 +15,6 @@ export const createRoomHandler = async (Req: Request, res: Response) => {
 
   if (!u) {
     res.status(400).json({ error: 'User does not exist' });
-    return;
   }
 
   try {
@@ -36,21 +36,6 @@ export const createRoomHandler = async (Req: Request, res: Response) => {
   }
 };
 
-export const getOngoingGameChats = async (req: Request, res: Response) => {
-  const roomId = Number(req.params.roomId);
-  const resp = await prisma.chat.findMany({
-    where: {
-      roomId: roomId,
-    },
-    take: 50,
-  });
-  if (!resp) {
-    res.json({ message: 'no message' });
-  }
-
-  res.json(resp);
-};
-
 export const slugToId = async (req: Request, res: Response) => {
   const slug = req.params.slug;
   const room = await prisma.room.findFirst({
@@ -67,20 +52,23 @@ export const slugToId = async (req: Request, res: Response) => {
   res.json({ roomId: room.id });
 };
 
-export const showSketches = async (req: Request, res: Response) => {
+export const getOngoingGameChats = async (req: Request, res: Response) => {
   const roomId = Number(req.params.roomId);
-  const resp = await prisma.sketch.findMany({
-    where: {
-      roomId: roomId,
-    },
-    orderBy: {
-      id: 'desc',
-    },
-    take: 50,
-  });
+  
+  const resp = await pub.LRANGE(`roomId:${roomId}`,0, -1);
+  if (!resp) {
+    res.json({ message: 'no message' });
+  }
+
+  res.json(resp);
+};
+
+export const getOngoingGameSketch = async (req: Request, res: Response) => {
+  const roomId = Number(req.params.roomId);
+  
+  const resp = await pub.get(`roomId:${roomId}`);
   if(!resp){
     res.json({error:"Error occured in Db connection"});
   }
   res.json(resp);
-  return;
 };

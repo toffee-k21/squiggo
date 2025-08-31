@@ -35,6 +35,9 @@ importers:
       '@repo/common-backend':
         specifier: workspace:*
         version: link:../../packages/common-backend
+      '@repo/redis-client':
+        specifier: workspace:*
+        version: link:../../packages/redis-client
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config

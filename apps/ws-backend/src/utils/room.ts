@@ -11,7 +11,7 @@ export async function isRoomExists(roomId:number): Promise<boolean>{
       return true;
     }
   } catch (e){
-    console.log("prisma couldn't process roomId :",e);
+    console.log("prisma couldn't process roomId :", e);
     return false;
   }
 }
