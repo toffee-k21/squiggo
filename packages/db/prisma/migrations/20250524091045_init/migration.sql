@@ -7,7 +7,7 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "photo" TEXT,
 
-    CONSTRAINT "User_pkey" RY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable

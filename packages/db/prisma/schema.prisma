@@ -14,8 +14,6 @@ model User {
   email     String   @unique
   password  String
   photo     String?
-  chats     Chat[]
-  sketch    Sketch[]
   rooms     Room[]
 }
 
@@ -24,27 +22,6 @@ model Room {
   slug      String   @unique
   createdAt DateTime @default(now())
   adminId   String
-  chats     Chat[]
-  sketch    Sketch[]
   admin     User     @relation(fields: [adminId], references: [id])
 }
 
-model Chat {
-  id      Int    @id @default(autoincrement())
-  type    String
-  roomId  Int
-  message String
-  userId  String
-  room    Room   @relation(fields: [roomId], references: [id])
-  user    User   @relation(fields: [userId], references: [id])
-}
-
-model Sketch {
-  id      Int    @id @default(autoincrement())
-  type    String
-  roomId  Int
-  message String
-  userId  String
-  room    Room   @relation(fields: [roomId], references: [id])
-  user    User   @relation(fields: [userId], references: [id])
-}
