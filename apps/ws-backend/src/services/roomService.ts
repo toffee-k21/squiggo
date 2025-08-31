@@ -5,5 +5,5 @@ export const joinRoom = async (roomId : number, userId : string) =>{
 } 
 
 export const leaveRoom = async (roomId:number, userId:string) => {
-    pub.sRem(`room:${roomId}`, userId);
+    await pub.sRem(`room:${roomId}`, userId);
 }

@@ -68,7 +68,27 @@ export const getOngoingGameSketch = async (req: Request, res: Response) => {
   
   const resp = await pub.get(`roomId:${roomId}`);
   if(!resp){
-    res.json({error:"Error occured in Db connection"});
+    res.json({error:"Error occured !"});
+  }
+  res.json(resp);
+};
+
+export const deleteOngoingGameChat = async (req: Request, res: Response) => {
+  const roomId = Number(req.params.roomId);
+  
+  const resp = await pub.lTrim(`room-chat:${roomId}`, 1, 0);
+  if(!resp){
+    res.json({error:"Error occured !"});
+  }
+  res.json(resp);
+};
+
+export const deleteOngoingGameSketch = async (req: Request, res: Response) => {
+  const roomId = Number(req.params.roomId);
+  
+  const resp = await pub.del(`room-sketch:${roomId}`);
+  if(!resp){
+    res.json({error:"Error occured !"});
   }
   res.json(resp);
 };
