@@ -2,9 +2,12 @@ import { createClient, RedisClientType } from "redis";
 import path from "path";
 import dotenv from "dotenv";
 
-dotenv.config({path: path.resolve(__dirname, "../../.env")});
+dotenv.config({path: path.resolve(__dirname, "../.env")});
+console.log(path.resolve(__dirname, "../.env"))
 
-export const pub: RedisClientType = createClient({
+console.log("env", process.env.REDIS_PASSWORD)
+
+export const pub:RedisClientType = createClient({
     username: 'default',
     password: process.env.REDIS_PASSWORD,
     socket: {
