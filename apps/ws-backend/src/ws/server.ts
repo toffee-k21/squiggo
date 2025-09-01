@@ -29,7 +29,7 @@ export const initWSServer = (port: number) => {
 
       ws.on('message',async (data)=>{
         let parsed = JSON.parse(data.toString());
-        if(typeof parsed.roomId == 'number'){
+        if(typeof parsed.roomId == 'string'){
           await handleMessage(parsed, userId);
         }
       })

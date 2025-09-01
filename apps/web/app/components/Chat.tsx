@@ -4,7 +4,7 @@ interface ChatProps {
   data: {
     id?: number,
     type: string,
-    roomId: number,
+    roomId: string,
     message: string,
     userId?: string
   }

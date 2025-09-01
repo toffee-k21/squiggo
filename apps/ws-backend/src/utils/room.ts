@@ -1,6 +1,6 @@
 import { prisma } from "@repo/db/prisma";
 
-export async function isRoomExists(roomId:number): Promise<boolean>{
+export async function isRoomExists(roomId: string): Promise<boolean>{
   try {
     const room = await prisma.room.findUnique({
       where:{id: roomId}

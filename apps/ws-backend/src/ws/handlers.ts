@@ -4,7 +4,7 @@ import { isRoomExists } from "../utils/room"
 
 interface Data {
     message : string;
-    roomId : number;
+    roomId : string;
     type : string;
 }
 

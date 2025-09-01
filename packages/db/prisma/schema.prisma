@@ -18,10 +18,13 @@ model User {
 }
 
 model Room {
-  id        Int      @id @default(autoincrement())
-  slug      String   @unique
-  createdAt DateTime @default(now())
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
   adminId   String
-  admin     User     @relation(fields: [adminId], references: [id])
+  mode      String
+  round     Int         @default(3)
+  hint      Int         @default(1)
+  drawTime  Int         @default(60)
+  admin     User        @relation(fields: [adminId], references: [id])
 }
 

@@ -9,7 +9,7 @@ interface Sketch {
 interface ChatProps {
   id?: number;
   type: string;
-  roomId: number;
+  roomId: string;
   message: string;
   userId?: string;
 }
@@ -17,9 +17,9 @@ interface ChatProps {
 export const sketch = async (
   canvas: HTMLCanvasElement,
   socket: WebSocket,
-  Id: number
+  Id: String
 ) => {
-  async function fetchSketches(id: number): Promise<Sketch[] | undefined> {
+  async function fetchSketches(id: String): Promise<Sketch[] | undefined> {
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("token="))

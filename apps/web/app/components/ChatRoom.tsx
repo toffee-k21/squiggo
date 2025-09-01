@@ -11,11 +11,11 @@ const backend_url = config.backend_url;
 interface ChatProps {
   id?: number,
   type: string,
-  roomId: number,
+  roomId: string,
   message: string,
   userId?: string
 }
-const ChatRoom = ({ roomId }: { roomId: number }) => {
+const ChatRoom = ({ roomId }: { roomId: string }) => {
 
   const [chats, setChats] = useState<ChatProps[]>([]);
   const [chatMessage, setChatMessage] = useState<string>();
@@ -27,7 +27,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
 
   const router = useRouter();
   useEffect(() => {
-    const handleFetchChats = async (id: number) => {
+    const handleFetchChats = async (id: string) => {
       const token = document.cookie.split("; ")
         .find(row => row.startsWith("token="))
         ?.split("=")[1];
@@ -37,7 +37,7 @@ const ChatRoom = ({ roomId }: { roomId: number }) => {
         return;
       }
       else if (!id) {
-        alert("invalid room slug !")
+        alert("invalid room Id !")
         router.push("/");
         return;
       }

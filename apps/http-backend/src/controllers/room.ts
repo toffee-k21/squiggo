@@ -21,7 +21,10 @@ export const createRoomHandler = async (Req: Request, res: Response) => {
     console.log(req.userId);
     const resp = await prisma.room.create({
       data: {
-        slug: req.body.slug,
+        mode : req.body.mode,
+        round: req.body.round,
+        hint: req.body.hint,
+        drawTime: req.body.drawTime,
         adminId: req.userId,
       },
     });
@@ -36,24 +39,8 @@ export const createRoomHandler = async (Req: Request, res: Response) => {
   }
 };
 
-export const slugToId = async (req: Request, res: Response) => {
-  const slug = req.params.slug;
-  const room = await prisma.room.findFirst({
-    where: {
-      slug: slug,
-    },
-  });
-
-  if (!room) {
-    res.json({ message: 'error' });
-    return;
-  }
-
-  res.json({ roomId: room.id });
-};
-
 export const getOngoingGameChats = async (req: Request, res: Response) => {
-  const roomId = Number(req.params.roomId);
+  const roomId = String(req.params.roomId);
   
   const resp = await pub.LRANGE(`roomId:${roomId}`,0, -1);
   if (!resp) {
@@ -64,7 +51,7 @@ export const getOngoingGameChats = async (req: Request, res: Response) => {
 };
 
 export const getOngoingGameSketch = async (req: Request, res: Response) => {
-  const roomId = Number(req.params.roomId);
+  const roomId = String(req.params.roomId);
   
   const resp = await pub.get(`roomId:${roomId}`);
   if(!resp){
@@ -74,7 +61,7 @@ export const getOngoingGameSketch = async (req: Request, res: Response) => {
 };
 
 export const deleteOngoingGameChat = async (req: Request, res: Response) => {
-  const roomId = Number(req.params.roomId);
+  const roomId = String(req.params.roomId);
   
   const resp = await pub.lTrim(`room-chat:${roomId}`, 1, 0);
   if(!resp){
@@ -84,7 +71,7 @@ export const deleteOngoingGameChat = async (req: Request, res: Response) => {
 };
 
 export const deleteOngoingGameSketch = async (req: Request, res: Response) => {
-  const roomId = Number(req.params.roomId);
+  const roomId = String(req.params.roomId);
   
   const resp = await pub.del(`room-sketch:${roomId}`);
   if(!resp){
