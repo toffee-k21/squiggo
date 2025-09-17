@@ -1,21 +1,10 @@
 import React from "react";
-import config from "../../utils.json";
 import ChatRoom from "../../components/ChatRoom";
 
-const backend_url = config.backend_url;
-
-const RoomPage = async ({ params }: {
-    params: {
-        roomId: string
-    }
-}) => {
-
-    const p = await params;
-    const roomId = p.roomId;
-
+const RoomPage = () => {
     return (
         <div>
-            <ChatRoom roomId={roomId} />
+            <ChatRoom />
         </div>
     );
 };

@@ -5,7 +5,7 @@ import { useSocket } from "../hooks/useSocket";
 import { useEffect, useRef, useState } from "react";
 import Canvas from "./Canvas";
 import { FiSend } from "react-icons/fi";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const backend_url = config.backend_url;
 interface ChatProps {
@@ -15,19 +15,25 @@ interface ChatProps {
   message: string,
   userId?: string
 }
-const ChatRoom = ({ roomId }: { roomId: string }) => {
+const ChatRoom = () => {
+
+  const params = useParams();
+  const roomId = params.slug as string;
+
 
   const [chats, setChats] = useState<ChatProps[]>([]);
   const [chatMessage, setChatMessage] = useState<string>();
   const { socket } = useSocket();
-  const Id = roomId;
+  // console.log(Id);
 
+  console.log("roomId", roomId);
   const joinedRef = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
   useEffect(() => {
     const handleFetchChats = async (id: string) => {
+      console.log("id:", id);
       const token = document.cookie.split("; ")
         .find(row => row.startsWith("token="))
         ?.split("=")[1];
@@ -36,8 +42,8 @@ const ChatRoom = ({ roomId }: { roomId: string }) => {
         router.push("/");
         return;
       }
-      else if (!id) {
-        alert("invalid room Id !")
+      if (!id) {
+        alert("room Id not detected");
         router.push("/");
         return;
       }
@@ -52,7 +58,7 @@ const ChatRoom = ({ roomId }: { roomId: string }) => {
       setChats(data);
     };
 
-    handleFetchChats(Id);
+    handleFetchChats(roomId);
   }, []);
 
   useEffect(() => {
@@ -62,7 +68,7 @@ const ChatRoom = ({ roomId }: { roomId: string }) => {
 
     socket.send(JSON.stringify({
       type: "join_room",
-      roomId: Id,
+      roomId: roomId,
       message: "joined room !"
     }));
 
@@ -98,7 +104,7 @@ const ChatRoom = ({ roomId }: { roomId: string }) => {
     }
     const data: ChatProps = {
       type: "chat",
-      roomId: Id,
+      roomId: roomId,
       message: chatMessage
     };
     socket?.send(JSON.stringify(data));
@@ -108,7 +114,7 @@ const ChatRoom = ({ roomId }: { roomId: string }) => {
     <div className='flex'>
       <div className=' border-r border-neutral-800 mr-1'>
         <div className='absolute top-0 text-pink-500 m-4 opacity-35 z-[-1]'>Stream Your Sketch...</div>
-        <Canvas key={Id} id={Id} socket={socket} />
+        <Canvas key={roomId} id={roomId} socket={socket} />
       </div>
       <div className='h-screen overflow-y-scroll pb-[5%]' ref={containerRef} style={{ scrollbarWidth: "none" }}>
         {

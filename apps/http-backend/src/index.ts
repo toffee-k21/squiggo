@@ -3,6 +3,9 @@ import router from './routes/base';
 import userRouter from './routes/userRouter';
 import roomRouter from './routes/roomRouter';
 import cors from 'cors';
+import { initRedis } from '@repo/redis-client';
+
+initRedis();
 
 const app = express();
 
