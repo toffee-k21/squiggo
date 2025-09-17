@@ -13,54 +13,88 @@ const CreateRoom = () => {
     const drawTimeRef = useRef<HTMLInputElement>(null);
 
     const handleCreateRoom = async () => {
-        const router = useRouter();
-        const token = document.cookie.split("; ")
-            .find(row => row.startsWith("token="))
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
             ?.split("=")[1];
         if (!token) {
-            alert("not authenticated !");
+            alert("Not authenticated!");
             router.push("/");
             return;
         }
+
         const resp = await fetch(`${backend_url}/room/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 mode: modeRef.current?.value,
-                round: roundRef.current?.value,
-                hint: hintRef.current?.value,
-                drawTime: drawTimeRef.current?.value,
+                round: parseInt(roundRef.current?.value!),
+                hint: parseInt(hintRef.current?.value!),
+                drawTime: parseInt(drawTimeRef.current?.value!),
             }),
-        })
-        const data = resp.json();
+        });
+        const data = await resp.json();
         console.log(data);
-    }
+    };
+
     return (
-        <div>
-            <input
-                className='border-1 p-2'
-                type="text"
-                ref={hintRef}
-            />
-            <input
-                className='border-1 p-2'
-                type="text"
-                ref={modeRef}
-            />
-            <input
-                className='border-1 p-2'
-                type="text"
-                ref={roundRef}
-            />
-            <input
-                className='border-1 p-2'
-                type="text"
-                ref={drawTimeRef}
-            />
-            <button className=' hover:cursor-pointer cursor-pointer bg-pink-500 m-1 p-2 border-2 border-pink-500 rounded-sm' onClick={handleCreateRoom}>Create</button>
+        <div className="flex justify-center items-center min-h-screen bg-neutral-950 rounded-lg">
+            <div className=" shadow-md rounded-xl p-6 w-full max-w-md">
+                <h1 className="text-2xl font-semibold text-center mb-6 text-pink-500">
+                    🎨 Create a Game Room
+                </h1>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block mb-1 text-gray-700">Hint</label>
+                        <input
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-pink-400 outline-none"
+                            type="text"
+                            placeholder="Enter hint for the round"
+                            ref={hintRef}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-gray-700">Mode</label>
+                        <input
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-pink-400 outline-none"
+                            type="text"
+                            placeholder="e.g. Classic / Team"
+                            ref={modeRef}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-gray-700">Rounds</label>
+                        <input
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-pink-400 outline-none"
+                            type="number"
+                            placeholder="Number of rounds"
+                            ref={roundRef}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-gray-700">Draw Time (seconds)</label>
+                        <input
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-pink-400 outline-none"
+                            type="number"
+                            placeholder="Time to draw in seconds"
+                            ref={drawTimeRef}
+                        />
+                    </div>
+
+                    <button
+                        className="w-full bg-pink-500 text-white font-semibold py-2 rounded-md hover:bg-pink-600 transition-colors"
+                        onClick={handleCreateRoom}
+                    >
+                        🚀 Create Room
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
