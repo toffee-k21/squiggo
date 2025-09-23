@@ -12,20 +12,21 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
-    "@repo/eslint-config":"workspace:*",
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
-    "@types/cors": "^2.8.18"
+    "@repo/eslint-config": "workspace:*",
+    "@types/cors": "^2.8.18",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "@repo/common-backend": "workspace:*",
+    "@repo/redis-client": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "@repo/redis-client": "workspace:*"
+    "jsonwebtoken": "^9.0.2"
   },
   "license": "ISC"
 }

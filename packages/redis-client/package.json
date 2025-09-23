@@ -2,18 +2,19 @@
   "name": "@repo/redis-client",
   "version": "1.0.0",
   "description": "",
-  "types": "dist/index.d.ts",  
+  "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
-    "build" : "tsc -b",
-    "dev" : "tsc -b --watch",
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "dotenv": "^17.2.1",
