@@ -1,1 +1,342 @@
 @import "tailwindcss";
+
+/* ------------------------- */
+/* Root variables */
+/* ------------------------- */
+:root {
+    --font-size: 16px;
+    --background: #e0f2fe;
+    --foreground: oklch(0.145 0 0);
+
+    /* Squiggo colors */
+    --squiggo-sky-blue: #87ceeb;
+    --squiggo-navy: #1e3a8a;
+    --squiggo-pastel-blue: #bfdbfe;
+    --squiggo-light-blue: #e0f2fe;
+    --squiggo-accent-yellow: #fef08a;
+    --squiggo-accent-pink: #fdf2f8;
+    --squiggo-black: #000000;
+
+    --card: #ffffff;
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+
+    --primary: #030213;
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.95 0.0058 264.53);
+    --secondary-foreground: #030213;
+
+    --muted: #ececf0;
+    --muted-foreground: #717182;
+    --accent: #e9ebef;
+    --accent-foreground: #030213;
+
+    --destructive: #d4183d;
+    --destructive-foreground: #ffffff;
+
+    --border: rgba(0, 0, 0, 0.1);
+    --input: transparent;
+    --input-background: #f3f3f5;
+    --switch-background: #cbced4;
+
+    --font-weight-medium: 500;
+    --font-weight-normal: 400;
+    --ring: oklch(0.708 0 0);
+    --radius: 0.625rem;
+}
+
+/* ------------------------- */
+/* Dark mode variables */
+/* ------------------------- */
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.145 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.145 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+
+    --primary: oklch(0.985 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+
+    --border: oklch(0.269 0 0);
+    --input: oklch(0.269 0 0);
+    --ring: oklch(0.439 0 0);
+}
+
+/* ------------------------- */
+/* Base styles */
+/* ------------------------- */
+@layer base {
+    * {
+        border: 1px solid var(--border);
+        outline-color: var(--ring);
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-size: var(--font-size);
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-weight: var(--font-weight-medium);
+        line-height: 1.5;
+    }
+
+    p,
+    input {
+        font-weight: var(--font-weight-normal);
+        line-height: 1.5;
+    }
+
+    label,
+    button {
+        font-weight: var(--font-weight-medium);
+        line-height: 1.5;
+    }
+}
+
+/* ------------------------- */
+/* Squiggo Doodle Components */
+/* ------------------------- */
+@layer components {
+
+    /* Doodle Buttons */
+    .doodle-btn {
+        background: var(--squiggo-sky-blue);
+        border: 3px solid var(--squiggo-black);
+        border-radius: 20px;
+        padding: 12px 24px;
+        color: var(--squiggo-navy);
+        font-family: 'Comic Sans MS', cursive;
+        font-weight: bold;
+        transform: rotate(-1deg);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .doodle-btn:hover {
+        transform: rotate(1deg) scale(1.05);
+        background: var(--squiggo-accent-yellow);
+        box-shadow: 4px 4px 0 var(--squiggo-black);
+        animation: wobble 0.5s ease-in-out;
+    }
+
+    .doodle-btn-secondary {
+        background: var(--squiggo-pastel-blue);
+        border: 3px solid var(--squiggo-black);
+        border-radius: 20px;
+        padding: 12px 24px;
+        color: var(--squiggo-navy);
+        font-family: 'Comic Sans MS', cursive;
+        font-weight: bold;
+        transform: rotate(1deg);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .doodle-btn-secondary:hover {
+        transform: rotate(-1deg) scale(1.05);
+        background: var(--squiggo-accent-pink);
+        box-shadow: 4px 4px 0 var(--squiggo-black);
+        animation: wobble 0.5s ease-in-out;
+    }
+
+    /* Wobble animation */
+    @keyframes wobble {
+
+        0%,
+        100% {
+            transform: rotate(-1deg) scale(1.05);
+        }
+
+        25% {
+            transform: rotate(1deg) scale(1.1);
+        }
+
+        50% {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        75% {
+            transform: rotate(0.5deg) scale(1.1);
+        }
+    }
+
+    /* Sketchy Borders */
+    .sketchy-border {
+        border: 3px solid transparent;
+        border-radius: 20px;
+        position: relative;
+        background: linear-gradient(white, white) padding-box,
+            repeating-linear-gradient(45deg, #000 0%, #000 2%, transparent 2%, transparent 4%) border-box;
+    }
+
+    .sketchy-border::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: 20px;
+        background: repeating-linear-gradient(0deg, transparent 0 1px, rgba(0, 0, 0, 0.2) 1px 2px),
+            repeating-linear-gradient(90deg, transparent 0 1px, rgba(0, 0, 0, 0.2) 1px 2px);
+        z-index: -1;
+    }
+
+    /* Doodle Bubble */
+    .doodle-bubble {
+        background: white;
+        border: 4px solid var(--squiggo-black);
+        border-radius: 30px;
+        padding: 24px;
+        transform: rotate(-1deg);
+        position: relative;
+        animation: bubble-float 4s ease-in-out infinite;
+    }
+
+    .doodle-bubble::before {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 40px;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-top: 18px solid var(--squiggo-black);
+    }
+
+    .doodle-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 42px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 14px solid white;
+    }
+
+    @keyframes bubble-float {
+
+        0%,
+        100% {
+            transform: rotate(-1deg) translateY(0);
+        }
+
+        50% {
+            transform: rotate(-0.5deg) translateY(-5px);
+        }
+    }
+
+    /* Sketchy underline */
+    .sketchy-underline {
+        position: relative;
+    }
+
+    .sketchy-underline::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--squiggo-sky-blue);
+        border-radius: 50%;
+        transform: rotate(-1deg);
+        animation: sketchy-wiggle 3s ease-in-out infinite;
+    }
+
+    @keyframes sketchy-wiggle {
+
+        0%,
+        100% {
+            transform: rotate(-1deg) scaleX(1);
+        }
+
+        25% {
+            transform: rotate(-0.5deg) scaleX(1.02);
+        }
+
+        50% {
+            transform: rotate(-1.5deg) scaleX(0.98);
+        }
+
+        75% {
+            transform: rotate(-0.8deg) scaleX(1.01);
+        }
+    }
+
+    /* Draw-on text animation */
+    .draw-on-text {
+        background: linear-gradient(90deg, var(--squiggo-navy) 0%, var(--squiggo-navy) 50%, transparent 50%);
+        background-size: 200% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: draw-on 3s ease forwards;
+    }
+
+    @keyframes draw-on {
+        0% {
+            background-position: 100% 0;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    /* Doodle icons */
+    .doodle-icon {
+        transition: all 0.3s ease;
+    }
+
+    .doodle-icon:hover {
+        filter: drop-shadow(3px 3px 0 var(--squiggo-black));
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Sketch arrow */
+    .sketch-arrow {
+        color: var(--squiggo-navy);
+        animation: arrow-wiggle 2s ease-in-out infinite;
+    }
+
+    @keyframes arrow-wiggle {
+
+        0%,
+        100% {
+            transform: rotate(0deg) scale(1);
+        }
+
+        25% {
+            transform: rotate(2deg) scale(1.1);
+        }
+
+        50% {
+            transform: rotate(-1deg) scale(0.95);
+        }
+
+        75% {
+            transform: rotate(1deg) scale(1.05);
+        }
+    }
+}

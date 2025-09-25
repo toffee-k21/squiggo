@@ -28,7 +28,7 @@ export const signupHandler = async (req: Request, res: Response) => {
       data: req.body,
     });
   } catch (e) {
-    res.json({ error: 'user already exists' });
+    res.json({ error: 'user already exists', e });
     return;
   }
 

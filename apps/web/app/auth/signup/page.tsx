@@ -23,6 +23,7 @@ const SignUp = () => {
             body: JSON.stringify({ email, password, username })
         });
         const token = await res.json();
+        console.log("token", token);
         if (typeof token == "string") {
             document.cookie = `token=${token}; path=/; max-age=2592000`;
             router.push("/");

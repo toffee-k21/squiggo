@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-black text-white`} >
+      <body className={`${geistSans.variable} ${geistMono.variable} bg-gradient-to-br from-pink-100 via-yellow-100 to-blue-100 text-black`} >
         <SketchProvider>
           {children}
         </SketchProvider>
