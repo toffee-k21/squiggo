@@ -22,20 +22,22 @@ export const initWSServer = (port: number) => {
 
   wss.on('connection', function connection(ws, request) {
 
-      let userId =  authenticateUser(request.url);
-      if(!userId) return wss.close();
+    const params = new URLSearchParams(request?.url?.split('?')[1]);
+    const username = params.get('username');
+    console.log(username);
+      if(!username) return wss.close();
         
-      localConnections.set(userId,ws);
+      localConnections.set(username,ws);
 
       ws.on('message',async (data)=>{
         let parsed = JSON.parse(data.toString());
         if(typeof parsed.roomId == 'string'){
-          await handleMessage(parsed, userId);
+          await handleMessage(parsed, username);
         }
       })
 
       ws.on('close', ()=>{
-          localConnections.delete(userId);
+          localConnections.delete(username);
       })
   });
 }

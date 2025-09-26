@@ -6,11 +6,16 @@ import { motion } from 'framer-motion';
 import { DoodlePencil, DoodleThoughtBubble, DoodleTrophy, SketchArrow } from './components/DoodleIcons';
 import { useState } from "react";
 import Auth from "./components/Auth";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
   const [showAuth, setShowAuth] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
+  const [username, setUsername] = useState("hero");
+  const [roomId, setRoomId] = useState("");
+
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-[#e0f2fe] paper-texture">
@@ -93,22 +98,44 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <motion.button
-                className="doodle-btn text-lg px-8 py-4"
-                onClick={() => setShowAuth(true)}
-                whileHover={{ scale: 1.1, rotate: 2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                🎮 Join Game
-              </motion.button>
-              <motion.button
-                className="doodle-btn-secondary text-lg px-8 py-4"
-                onClick={() => setShowCreateRoom(true)}
-                whileHover={{ scale: 1.1, rotate: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                ✨ Create Game
-              </motion.button>
+              {/* Input Fields */}
+              <div>
+                <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                  <input
+                    type="text"
+                    placeholder="Enter Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="border-2 border-[#87ceeb] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#87ceeb]"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter Room ID"
+                    value={roomId}
+                    onChange={(e) => setRoomId(e.target.value)}
+                    className="border-2 border-[#87ceeb] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#87ceeb]"
+                  />
+                </div>
+              </div>
+              <div>
+                <motion.button
+                  className="doodle-btn text-lg px-8 py-4"
+                  // onClick={() => setShowAuth(true)}
+                  onClick={() => router.push(`/room/${roomId}?username=${username}`)}
+                  whileHover={{ scale: 1.1, rotate: 2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  🎮 Join Game
+                </motion.button>
+                <motion.button
+                  className="doodle-btn-secondary text-lg px-8 py-4"
+                  onClick={() => setShowCreateRoom(true)}
+                  whileHover={{ scale: 1.1, rotate: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  ✨ Create Game
+                </motion.button>
+              </div>
             </motion.div>
           </div>
 

@@ -1,6 +1,7 @@
 "use client"
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSocket } from "../hooks/useSocket";
 import {
     Pencil,
     Palette,
@@ -15,6 +16,7 @@ import {
     Maximize2,
     Minimize2
 } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 interface Player {
     id: string;
@@ -33,7 +35,18 @@ interface ChatMessage {
     isCorrectGuess?: boolean;
 }
 
-export default function GameplayPage() {
+interface ChatProps {
+    id?: number;
+    type: string;
+    roomId: string;
+    message: string;
+    userId?: string;
+}
+
+export default function GameplayPage({ roomId, username }: any) {
+    // console.log(roomId, username);
+    if (!username) return;
+    const { socket, loading } = useSocket(username);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [currentTool, setCurrentTool] = useState<'pen' | 'eraser'>('pen');
@@ -92,6 +105,12 @@ export default function GameplayPage() {
         return () => clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        socket?.addEventListener("message", handleMessage);
+        socket?.send(JSON.stringify({ type: "join_room", roomId, message: { name: "myname" } }));
+        return () => socket?.removeEventListener("message", handleMessage);
+    }, [socket])
+
     // Canvas drawing functionality
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!canvasRef.current) return;
@@ -124,6 +143,13 @@ export default function GameplayPage() {
             ctx.lineWidth = brushSize;
             ctx.lineCap = 'round';
             ctx.stroke();
+            const message = {
+                x: x,
+                y: y,
+                width: brushSize,
+                color: currentColor
+            };
+            socket?.send(JSON.stringify({ type: "sketch", roomId, message: message }));
         }
     };
 
@@ -158,6 +184,27 @@ export default function GameplayPage() {
     const onClose = () => {
         console.log("close");
     }
+
+    const handleMessage = (event: MessageEvent) => {
+        console.log("ed", event.data);
+        const chat: ChatProps = event.data;
+        if (chat.type == "join_room") {
+            console.log("new user join");
+        }
+        else if (chat.type == "sketch") {
+            console.log("WebSocket message received");
+            const data = JSON.parse(chat.message);
+            const canvas = canvasRef.current;
+            const ctx = canvas?.getContext('2d');
+            if (!ctx) return;
+            ctx.lineTo(data.x, data.y);
+            ctx.strokeStyle = data.color;
+            ctx.lineWidth = data.width;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+    };
+
     const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
 
     return (
