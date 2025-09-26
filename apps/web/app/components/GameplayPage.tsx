@@ -43,6 +43,13 @@ interface ChatProps {
     userId?: string;
 }
 
+interface SketchMessage {
+    x: number,
+    y: number,
+    width: string,
+    color: string
+}
+
 export default function GameplayPage({ roomId, username }: any) {
     // console.log(roomId, username);
     if (!username) return;
@@ -186,22 +193,34 @@ export default function GameplayPage({ roomId, username }: any) {
     }
 
     const handleMessage = (event: MessageEvent) => {
-        console.log("ed", event.data);
-        const chat: ChatProps = event.data;
+        // console.log("type", typeof event.data);
+        let lastPos: { x: number; y: number } | null = null;
+        const chat: ChatProps = JSON.parse(event.data);
         if (chat.type == "join_room") {
             console.log("new user join");
         }
         else if (chat.type == "sketch") {
             console.log("WebSocket message received");
-            const data = JSON.parse(chat.message);
+            console.log(typeof chat.message);
+            const data: SketchMessage = chat.message;
             const canvas = canvasRef.current;
             const ctx = canvas?.getContext('2d');
             if (!ctx) return;
+            ctx.beginPath();
+
+            if (lastPos) {
+                ctx.moveTo(lastPos.x, lastPos.y); // previous point
+            } else {
+                ctx.moveTo(data.x, data.y); // first point
+            }
+
             ctx.lineTo(data.x, data.y);
             ctx.strokeStyle = data.color;
             ctx.lineWidth = data.width;
             ctx.lineCap = 'round';
             ctx.stroke();
+
+            lastPos = { x: data.x, y: data.y };
         }
     };
 
