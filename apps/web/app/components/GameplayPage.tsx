@@ -39,14 +39,15 @@ interface ChatProps {
     id?: number;
     type: string;
     roomId: string;
-    message: string;
+    message: string | SketchMessage;
     userId?: string;
 }
 
 interface SketchMessage {
+    instruction: string,
     x: number,
     y: number,
-    width: string,
+    width: number,
     color: string
 }
 
@@ -151,6 +152,7 @@ export default function GameplayPage({ roomId, username }: any) {
             ctx.lineCap = 'round';
             ctx.stroke();
             const message = {
+                instruction: "draw",
                 x: x,
                 y: y,
                 width: brushSize,
@@ -162,6 +164,10 @@ export default function GameplayPage({ roomId, username }: any) {
 
     const stopDrawing = () => {
         setIsDrawing(false);
+        const message = {
+            instruction: "stop"
+        };
+        socket?.send(JSON.stringify({ type: "sketch", roomId, message: message }));
     };
 
     const clearCanvas = () => {
@@ -171,7 +177,12 @@ export default function GameplayPage({ roomId, username }: any) {
             if (ctx) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
+            const message = {
+                instruction: "clear"
+            };
+            socket?.send(JSON.stringify({ type: "sketch", roomId, message: message }));
         }
+
     };
 
     const sendMessage = () => {
@@ -192,35 +203,42 @@ export default function GameplayPage({ roomId, username }: any) {
         console.log("close");
     }
 
+    let lastPos: { x: number; y: number } | null = null;
     const handleMessage = (event: MessageEvent) => {
         // console.log("type", typeof event.data);
-        let lastPos: { x: number; y: number } | null = null;
         const chat: ChatProps = JSON.parse(event.data);
         if (chat.type == "join_room") {
             console.log("new user join");
         }
         else if (chat.type == "sketch") {
-            console.log("WebSocket message received");
-            console.log(typeof chat.message);
-            const data: SketchMessage = chat.message;
+            const data = chat.message as SketchMessage;
             const canvas = canvasRef.current;
-            const ctx = canvas?.getContext('2d');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
             if (!ctx) return;
-            ctx.beginPath();
+            if (data.instruction == "draw") {
+                ctx.beginPath();
 
-            if (lastPos) {
-                ctx.moveTo(lastPos.x, lastPos.y); // previous point
-            } else {
-                ctx.moveTo(data.x, data.y); // first point
+                if (lastPos) {
+                    ctx.moveTo(lastPos.x, lastPos.y); // previous point
+                } else {
+                    ctx.moveTo(data.x, data.y); // first point
+                }
+
+                ctx.lineTo(data.x, data.y);
+                ctx.strokeStyle = data.color;
+                ctx.lineWidth = data.width;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+
+                lastPos = { x: data.x, y: data.y };
             }
-
-            ctx.lineTo(data.x, data.y);
-            ctx.strokeStyle = data.color;
-            ctx.lineWidth = data.width;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-
-            lastPos = { x: data.x, y: data.y };
+            else if (data.instruction == "clear") {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            else if (data.instruction == "stop") {
+                lastPos = null;
+            }
         }
     };
 
