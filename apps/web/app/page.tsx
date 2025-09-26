@@ -12,7 +12,7 @@ export default function Home() {
 
   const [showAuth, setShowAuth] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
-  const [username, setUsername] = useState("hero");
+  const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
 
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function Home() {
             {/* Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <a href="#" className="text-[#1e3a8a] hover:text-[#87ceeb] transition-colors transform hover:rotate-1">Home</a>
-              <a href="#" className="text-[#1e3a8a] hover:text-[#87ceeb] transition-colors transform hover:rotate-1">How to Play</a>
+              <a href="#how" className="text-[#1e3a8a] hover:text-[#87ceeb] transition-colors transform hover:rotate-1">How to Play</a>
               <button
                 onClick={() => setShowAuth(true)}
                 className="doodle-btn-secondary"
@@ -98,43 +98,87 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {/* Input Fields */}
               <div>
-                <div className="flex flex-col sm:flex-row gap-4 mb-4">
-                  <input
-                    type="text"
-                    placeholder="Enter Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="border-2 border-[#87ceeb] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#87ceeb]"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Enter Room ID"
-                    value={roomId}
-                    onChange={(e) => setRoomId(e.target.value)}
-                    className="border-2 border-[#87ceeb] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#87ceeb]"
-                  />
+                {/* Input Fields */}
+                <div>
+                  <div className="flex flex-col sm:flex-row gap-6 mb-6">
+                    {/* Username input */}
+                    <div className="relative group w-full sm:w-auto">
+                      <div className="
+                        bg-white 
+                        rounded-2xl 
+                        border-4 
+                        border-dashed 
+                        border-[#87ceeb] 
+                        shadow-[4px_4px_0_0_#1e3a8a] 
+                        px-8 py-4 
+                        transform 
+                        group-hover:-rotate-1 
+                        transition-all 
+                        duration-300 
+                        w-full sm:w-64">
+                        <input
+                          type="text"
+                          placeholder="Your awesome name"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="w-full bg-transparent outline-none text-lg text-[#1e3a8a] placeholder:text-[#1e3a8a]/60"
+                        />
+                      </div>
+                      <span className="absolute -top-3 left-6 bg-[#87ceeb] text-white text-xs px-3 py-1 rounded-full transform -rotate-3">
+                        Player Name
+                      </span>
+                    </div>
+
+                    {/* Room ID input */}
+                    <div className="relative group w-full sm:w-auto">
+                      <div className="
+                        bg-white 
+                        rounded-2xl 
+                        border-4 
+                        border-dashed 
+                        border-[#87ceeb] 
+                        shadow-[4px_4px_0_0_#1e3a8a] 
+                        px-8 py-4
+                        transform 
+                        group-hover:rotate-1 
+                        transition-all 
+                        duration-300 
+                        w-full sm:w-64">
+                        <input
+                          type="text"
+                          placeholder="Magic Room Code"
+                          value={roomId}
+                          onChange={(e) => setRoomId(e.target.value)}
+                          className="w-full bg-transparent outline-none text-lg text-[#1e3a8a] placeholder:text-[#1e3a8a]/60"
+                        />
+                      </div>
+                      <span className="absolute -top-3 left-6 bg-[#1e3a8a] text-white text-xs px-3 py-1 rounded-full transform rotate-3">
+                        Room ID
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <motion.button
-                  className="doodle-btn text-lg px-8 py-4"
-                  // onClick={() => setShowAuth(true)}
-                  onClick={() => router.push(`/room/${roomId}?username=${username}`)}
-                  whileHover={{ scale: 1.1, rotate: 2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  🎮 Join Game
-                </motion.button>
-                <motion.button
-                  className="doodle-btn-secondary text-lg px-8 py-4"
-                  onClick={() => setShowCreateRoom(true)}
-                  whileHover={{ scale: 1.1, rotate: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  ✨ Create Game
-                </motion.button>
+
+                <div>
+                  <motion.button
+                    className="doodle-btn text-lg px-8 py-4 mr-4"
+                    // onClick={() => setShowAuth(true)}
+                    onClick={() => router.push(`/room/${roomId}?username=${username}`)}
+                    whileHover={{ scale: 1.1, rotate: 2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    🎮 Join Game
+                  </motion.button>
+                  <motion.button
+                    className="doodle-btn-secondary text-lg px-8 py-4"
+                    onClick={() => setShowCreateRoom(true)}
+                    whileHover={{ scale: 1.1, rotate: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ✨ Create Game
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -238,7 +282,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="container mx-auto px-6 py-16">
+      <section className="container mx-auto px-6 py-16" id="how">
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}

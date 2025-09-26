@@ -17,6 +17,7 @@ import {
     Minimize2
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface Player {
     id: string;
@@ -56,6 +57,7 @@ export default function GameplayPage({ roomId, username }: any) {
     // console.log(roomId, username);
     if (!username) return;
     const { socket, loading } = useSocket(username);
+    const router = useRouter();
     const lastPosRef = useRef<{ x: number; y: number } | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
@@ -118,7 +120,11 @@ export default function GameplayPage({ roomId, username }: any) {
     useEffect(() => {
         socket?.addEventListener("message", handleMessage);
         socket?.send(JSON.stringify({ type: "join_room", roomId, message: { name: "myname" } }));
-        return () => socket?.removeEventListener("message", handleMessage);
+
+        return () => {
+            socket?.removeEventListener("message", handleMessage);
+            socket?.close();
+        };
     }, [socket])
 
     // Canvas drawing functionality
@@ -209,8 +215,12 @@ export default function GameplayPage({ roomId, username }: any) {
     };
 
     const onClose = () => {
-        console.log("close");
-    }
+        socket?.send(JSON.stringify({ type: "leave_room", roomId }));
+        socket?.close();
+
+        console.log("Connection closed");
+        router.push("/");
+    };
 
     // let lastPos: { x: number; y: number } | null = null;
     const RemoteLastPosRef = useRef<{ x: number; y: number } | null>(null);
