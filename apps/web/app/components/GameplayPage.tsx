@@ -45,6 +45,7 @@ interface ChatProps {
 
 interface SketchMessage {
     instruction: string,
+    tool: string,
     x: number,
     y: number,
     width: number,
@@ -55,6 +56,7 @@ export default function GameplayPage({ roomId, username }: any) {
     // console.log(roomId, username);
     if (!username) return;
     const { socket, loading } = useSocket(username);
+    const lastPosRef = useRef<{ x: number; y: number } | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [currentTool, setCurrentTool] = useState<'pen' | 'eraser'>('pen');
@@ -128,11 +130,8 @@ export default function GameplayPage({ roomId, username }: any) {
         const y = e.clientY - rect.top;
 
         setIsDrawing(true);
+        lastPosRef.current = { x, y }; // start point
         const ctx = canvas.getContext('2d');
-        if (ctx) {
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
     };
 
     const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -146,13 +145,22 @@ export default function GameplayPage({ roomId, username }: any) {
         const ctx = canvas.getContext('2d');
         if (ctx) {
             ctx.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
+
+            ctx.beginPath();
+            if (lastPosRef.current) {
+                ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+            } else {
+                ctx.moveTo(x, y);
+            }
             ctx.lineTo(x, y);
             ctx.strokeStyle = currentColor;
             ctx.lineWidth = brushSize;
             ctx.lineCap = 'round';
             ctx.stroke();
+            lastPosRef.current = { x, y };
             const message = {
                 instruction: "draw",
+                tool: currentTool,
                 x: x,
                 y: y,
                 width: brushSize,
@@ -164,6 +172,7 @@ export default function GameplayPage({ roomId, username }: any) {
 
     const stopDrawing = () => {
         setIsDrawing(false);
+        lastPosRef.current = null;
         const message = {
             instruction: "stop"
         };
@@ -203,7 +212,8 @@ export default function GameplayPage({ roomId, username }: any) {
         console.log("close");
     }
 
-    let lastPos: { x: number; y: number } | null = null;
+    // let lastPos: { x: number; y: number } | null = null;
+    const RemoteLastPosRef = useRef<{ x: number; y: number } | null>(null);
     const handleMessage = (event: MessageEvent) => {
         // console.log("type", typeof event.data);
         const chat: ChatProps = JSON.parse(event.data);
@@ -217,10 +227,12 @@ export default function GameplayPage({ roomId, username }: any) {
             const ctx = canvas.getContext('2d');
             if (!ctx) return;
             if (data.instruction == "draw") {
+                ctx.globalCompositeOperation = data.tool == "eraser" ? 'destination-out' : 'source-over';
+
                 ctx.beginPath();
 
-                if (lastPos) {
-                    ctx.moveTo(lastPos.x, lastPos.y); // previous point
+                if (RemoteLastPosRef && RemoteLastPosRef.current) {
+                    ctx.moveTo(RemoteLastPosRef.current.x, RemoteLastPosRef.current.y); // previous point
                 } else {
                     ctx.moveTo(data.x, data.y); // first point
                 }
@@ -231,13 +243,14 @@ export default function GameplayPage({ roomId, username }: any) {
                 ctx.lineCap = 'round';
                 ctx.stroke();
 
-                lastPos = { x: data.x, y: data.y };
+                RemoteLastPosRef.current = { x: data.x, y: data.y };
+
             }
             else if (data.instruction == "clear") {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
             else if (data.instruction == "stop") {
-                lastPos = null;
+                RemoteLastPosRef.current = null;
             }
         }
     };
@@ -259,7 +272,7 @@ export default function GameplayPage({ roomId, username }: any) {
                     <div className="flex items-center space-x-2">
                         <Pencil className="w-6 h-6 text-[#87ceeb]" />
                         <h1 className="text-xl font-bold text-[#1e3a8a] font-mono transform -rotate-1">
-                            Room: ABC123
+                            Room: {roomId}
                         </h1>
                     </div>
                 </div>
