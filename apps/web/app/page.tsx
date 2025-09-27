@@ -17,17 +17,18 @@ export default function Home() {
   const [istoken, setIsToken] = useState<string | null>(null);
 
   const router = useRouter();
+
+  function getCookie(name: any) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+  }
   useEffect(() => {
     const token = getCookie('token');
     console.log("aagaya tooen ", token);
     if (!token) return;
     setIsToken(token);
   }, [])
-  function getCookie(name: any) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift();
-  }
 
   return (
     <div className="min-h-screen bg-[#e0f2fe] paper-texture">

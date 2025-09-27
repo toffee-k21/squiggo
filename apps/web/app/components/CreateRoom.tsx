@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Pencil, Users, Clock, GamepadIcon, HelpCircle, Copy, Check } from 'lucide-react';
+import { backend_url } from "../utils.json";
 
 export default function CreateRoom({ onClose }: { onClose: () => void }) {
     const [formData, setFormData] = useState({
         roomName: '',
-        hint: '',
+        hint: 0,
         mode: 'normal',
         rounds: '3',
-        drawTime: '60'
+        drawTime: 60
     });
     const [roomCode, setRoomCode] = useState('');
     const [isCreated, setIsCreated] = useState(false);
@@ -18,12 +19,28 @@ export default function CreateRoom({ onClose }: { onClose: () => void }) {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    function getCookie(name: any) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate room creation
-        const generatedCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-        setRoomCode(generatedCode);
-        setIsCreated(true);
+        const token = getCookie('token');
+        const res = await fetch(`${backend_url}/room/create/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(formData)
+        })
+        const roomId = await res.json();
+        setRoomCode(roomId);
+        console.log("created", roomId);
+        alert(`Here is your roomId : ${roomId} : copy it and paste in ROOM ID`);
+        // setIsCreated(true);
     };
 
     const copyRoomCode = async () => {
@@ -337,7 +354,7 @@ export default function CreateRoom({ onClose }: { onClose: () => void }) {
                         transition={{ delay: 0.7 }}
                     >
                         <label className="block text-[#1e3a8a] font-bold mb-2 transform rotate-1">
-                            Custom Word List (Optional)
+                            Hint
                         </label>
                         <div className="relative">
                             <HelpCircle className="absolute left-3 top-3 w-5 h-5 text-[#87ceeb]" />
