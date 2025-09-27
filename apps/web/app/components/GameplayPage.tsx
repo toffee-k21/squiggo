@@ -16,8 +16,8 @@ import {
     Maximize2,
     Minimize2
 } from 'lucide-react';
-import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { backend_url } from "../utils.json";
 
 interface Player {
     id: string;
@@ -54,7 +54,6 @@ interface SketchMessage {
 }
 
 export default function GameplayPage({ roomId, username }: any) {
-    // console.log(roomId, username);
     if (!username) return;
     const { socket, loading } = useSocket(username);
     const router = useRouter();
@@ -125,7 +124,19 @@ export default function GameplayPage({ roomId, username }: any) {
             socket?.removeEventListener("message", handleMessage);
             socket?.close();
         };
-    }, [socket])
+    }, [socket]);
+
+    const fetchPlayersList = async () => {
+        const resp = await fetch(`${backend_url}/room/players/${roomId}`);
+        const data = await resp.json();
+        console.log(data);
+        return data;
+    }
+
+    useEffect(() => {
+        const res = fetchPlayersList();
+        // console.log(res);
+    }, [])
 
     // Canvas drawing functionality
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -137,7 +148,7 @@ export default function GameplayPage({ roomId, username }: any) {
 
         setIsDrawing(true);
         lastPosRef.current = { x, y }; // start point
-        const ctx = canvas.getContext('2d');
+        // const ctx = canvas.getContext('2d');
     };
 
     const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {

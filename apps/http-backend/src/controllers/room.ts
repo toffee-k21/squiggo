@@ -79,3 +79,13 @@ export const deleteOngoingGameSketch = async (req: Request, res: Response) => {
   }
   res.json(resp);
 };
+
+export const getAllPlayersList = async (req: Request, res: Response) => {
+  const roomId = String(req.params.roomId);
+  
+  const players = await pub.sMembers(`room:${roomId}`);
+  if(!players){
+    res.json({error:"Error occured !"});
+  }
+  res.json(players);
+};
