@@ -4,7 +4,7 @@ import { Pencil, Github, Twitter, Instagram } from 'lucide-react';
 import Navbar from "./components/Navbar";
 import { motion } from 'framer-motion';
 import { DoodlePencil, DoodleThoughtBubble, DoodleTrophy, SketchArrow } from './components/DoodleIcons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Auth from "./components/Auth";
 import { useRouter } from "next/navigation";
 
@@ -14,8 +14,20 @@ export default function Home() {
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
+  const [istoken, setIsToken] = useState<string | null>(null);
 
   const router = useRouter();
+  useEffect(() => {
+    const token = getCookie('token');
+    console.log("aagaya tooen ", token);
+    if (!token) return;
+    setIsToken(token);
+  }, [])
+  function getCookie(name: any) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+  }
 
   return (
     <div className="min-h-screen bg-[#e0f2fe] paper-texture">
@@ -172,8 +184,7 @@ export default function Home() {
                   </motion.button>
                   <motion.button
                     className="doodle-btn-secondary text-lg px-8 py-4"
-                    // onClick={() => setShowCreateRoom(true)}
-                    onClick={() => setShowAuth(true)}
+                    onClick={() => istoken ? setShowCreateRoom(true) : setShowAuth(true)}
                     whileHover={{ scale: 1.1, rotate: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -279,11 +290,11 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </div>
-        </div>
-      </section>
+        </div >
+      </section >
 
       {/* How It Works Section */}
-      <section className="container mx-auto px-6 py-16" id="how">
+      < section className="container mx-auto px-6 py-16" id="how" >
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
@@ -346,10 +357,10 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section >
 
       {/* Play with Friends Callout */}
-      <section className="container mx-auto px-6 py-16">
+      < section className="container mx-auto px-6 py-16" >
         <motion.div
           className="max-w-4xl mx-auto"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -372,10 +383,10 @@ export default function Home() {
             </button>
           </div>
         </motion.div>
-      </section>
+      </section >
 
       {/* Footer */}
-      <footer className="bg-[#1e3a8a] text-white py-12">
+      < footer className="bg-[#1e3a8a] text-white py-12" >
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
@@ -414,13 +425,13 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </footer>
+      </footer >
 
       {/* Auth Modal */}
       {showAuth && <Auth onClose={() => setShowAuth(false)} />}
 
       {/* Create Room Modal */}
       {showCreateRoom && <CreateRoom onClose={() => setShowCreateRoom(false)} />}
-    </div>
+    </div >
   );
 }
