@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Pencil, Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
+import { backend_url } from "../utils.json"
 
 export default function Auth({ onClose }: { onClose: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,17 +10,47 @@ export default function Auth({ onClose }: { onClose: () => void }) {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    // confirmPassword: ''
   });
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
+    let res;
+    if (isLogin) {
+      res = await fetch(`${backend_url}/signin/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+    }
+    else {
+      res = await fetch(`${backend_url}/signup/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+    }
+    const token = await res.json();
+    console.log(token);
+    document.cookie = `token=${token}; path=/; max-age=86400; secure; samesite=strict`;
+    // console.log('Form submitted:', formData);
   };
 
   return (
@@ -179,7 +210,7 @@ export default function Auth({ onClose }: { onClose: () => void }) {
               </motion.div>
 
               {/* Confirm Password field (signup only) */}
-              {!isLogin && (
+              {/* {!isLogin && (
                 <motion.div
                   className="doodle-input-container"
                   initial={{ opacity: 0, y: 20 }}
@@ -201,7 +232,7 @@ export default function Auth({ onClose }: { onClose: () => void }) {
                     />
                   </div>
                 </motion.div>
-              )}
+              )} */}
             </motion.div>
           </AnimatePresence>
 

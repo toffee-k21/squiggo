@@ -172,7 +172,8 @@ export default function Home() {
                   </motion.button>
                   <motion.button
                     className="doodle-btn-secondary text-lg px-8 py-4"
-                    onClick={() => setShowCreateRoom(true)}
+                    // onClick={() => setShowCreateRoom(true)}
+                    onClick={() => setShowAuth(true)}
                     whileHover={{ scale: 1.1, rotate: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
