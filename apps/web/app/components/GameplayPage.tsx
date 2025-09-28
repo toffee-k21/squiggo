@@ -24,7 +24,6 @@ interface Player {
     name: string;
     score: number;
     isDrawing: boolean;
-    avatar: string;
 }
 
 interface ChatMessage {
@@ -74,14 +73,7 @@ export default function GameplayPage({ roomId, username }: any) {
         '#FFC0CB', '#A52A2A', '#808080', '#000080', '#008000'
     ];
 
-    const [players] = useState<Player[]>([
-        { id: '1', name: 'ArtMaster99', score: 245, isDrawing: true, avatar: '🎨' },
-        { id: '2', name: 'DoodleKing', score: 198, isDrawing: false, avatar: '👑' },
-        { id: '3', name: 'SketchyBoy', score: 167, isDrawing: false, avatar: '✏️' },
-        { id: '4', name: 'PaintLover', score: 134, isDrawing: false, avatar: '🖌️' },
-        { id: '5', name: 'ColorWhiz', score: 89, isDrawing: false, avatar: '🌈' },
-        { id: '6', name: 'LineArt22', score: 67, isDrawing: false, avatar: '📏' }
-    ]);
+    const [players, setPlayers] = useState<Player[]>([]);
 
     const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
         {
@@ -135,7 +127,10 @@ export default function GameplayPage({ roomId, username }: any) {
 
     useEffect(() => {
         const res = fetchPlayersList();
-        // console.log(res);
+
+        console.log(res);
+        // { id: '1', name: 'ArtMaster99', score: 245, isDrawing: true, avatar: '🎨' },
+        setPlayers([{ id: '1', name: 'ArtMaster99', score: 245, isDrawing: true, }]);
     }, [])
 
     // Canvas drawing functionality
@@ -368,9 +363,6 @@ export default function GameplayPage({ roomId, username }: any) {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-3">
                                         <div className="relative">
-                                            <div className="w-10 h-10 bg-[#87ceeb] border-2 border-[#000] rounded-full flex items-center justify-center text-lg">
-                                                {player.avatar}
-                                            </div>
                                             {index === 0 && (
                                                 <motion.div
                                                     className="absolute -top-1 -right-1 w-5 h-5 bg-[#fef08a] border border-[#000] rounded-full flex items-center justify-center"
