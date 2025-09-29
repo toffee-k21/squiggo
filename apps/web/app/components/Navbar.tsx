@@ -3,7 +3,6 @@ import Link from "next/link";
 import React from "react";
 import { FiUserPlus } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { Pencil } from "lucide-react";
 
 const Navbar = () => {
     return (

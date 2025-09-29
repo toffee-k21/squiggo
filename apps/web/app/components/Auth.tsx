@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pencil, Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
 import { backend_url } from "../utils.json"
+import Image from 'next/image';
 
 export default function Auth({ onClose }: { onClose: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -78,7 +79,7 @@ export default function Auth({ onClose }: { onClose: () => void }) {
           transition={{ delay: 0.2 }}
         >
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Pencil className="w-8 h-8 text-[#87ceeb]" />
+            <Image src="/images/squiggo_logo.png" alt="Squiggo Logo" width={100} height={100} />
             <h1 className="text-3xl font-bold text-[#1e3a8a] font-mono transform -rotate-1">
               Squiggo
             </h1>

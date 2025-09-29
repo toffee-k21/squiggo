@@ -1,12 +1,13 @@
 "use client"
 import CreateRoom from "./components/CreateRoom";
-import { Pencil, Github, Twitter, Instagram } from 'lucide-react';
+import { Github, Twitter, Instagram } from 'lucide-react';
 import Navbar from "./components/Navbar";
 import { motion } from 'framer-motion';
 import { DoodlePencil, DoodleThoughtBubble, DoodleTrophy, SketchArrow } from './components/DoodleIcons';
 import { useEffect, useState } from "react";
 import Auth from "./components/Auth";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Home() {
 
@@ -43,7 +44,7 @@ export default function Home() {
               animate={{ rotate: [0, -2, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Pencil className="w-8 h-8 text-[#87ceeb]" />
+              <Image src="/images/squiggo_logo.png" alt="Squiggo Logo" width={100} height={100} />
               <h1 className="text-3xl font-bold text-[#1e3a8a] font-mono transform -rotate-1">
                 Squiggo
               </h1>
@@ -391,7 +392,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <Pencil className="w-8 h-8 text-[#87ceeb]" />
+              <Image src="/images/squiggo_logo.png" alt="Squiggo Logo" width={100} height={100} />
               <span className="text-2xl font-bold font-mono transform -rotate-1">Squiggo</span>
             </div>
 

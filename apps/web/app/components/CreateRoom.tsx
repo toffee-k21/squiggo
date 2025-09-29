@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pencil, Users, Clock, GamepadIcon, HelpCircle, Copy, Check } from 'lucide-react';
+import { Users, Clock, GamepadIcon, HelpCircle, Copy, Check } from 'lucide-react';
 import { backend_url } from "../utils.json";
 
 export default function CreateRoom({ onClose }: { onClose: () => void }) {
