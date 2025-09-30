@@ -20,7 +20,7 @@ import { useRouter } from 'next/navigation';
 import { backend_url } from "../utils.json";
 
 interface Player {
-    id: string;
+    // id: string;
     name: string;
     score: number;
     isDrawing: boolean;
@@ -122,15 +122,12 @@ export default function GameplayPage({ roomId, username }: any) {
         const resp = await fetch(`${backend_url}/room/players/${roomId}`);
         const data = await resp.json();
         console.log(data);
+        setPlayers(data);
         return data;
     }
 
     useEffect(() => {
-        const res = fetchPlayersList();
-
-        console.log(res);
-        // { id: '1', name: 'ArtMaster99', score: 245, isDrawing: true, avatar: '🎨' },
-        setPlayers([{ id: '1', name: 'ArtMaster99', score: 245, isDrawing: true, }]);
+        fetchPlayersList();
     }, [])
 
     // Canvas drawing functionality
@@ -350,7 +347,7 @@ export default function GameplayPage({ roomId, username }: any) {
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
                         {sortedPlayers.map((player, index) => (
                             <motion.div
-                                key={player.id}
+                                key={index}
                                 className={`p-3 border-3 border-[#000] rounded-2xl relative transition-all duration-300 ${player.isDrawing
                                     ? 'bg-[#fef08a] shadow-md transform rotate-1'
                                     : 'bg-white hover:bg-[#bfdbfe]/30 transform -rotate-1'

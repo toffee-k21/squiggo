@@ -84,8 +84,14 @@ export const getAllPlayersList = async (req: Request, res: Response) => {
   const roomId = String(req.params.roomId);
   
   const players = await pub.sMembers(`room:${roomId}`);
-  if(!players){
-    res.json({error:"Error occured !"});
+  if(players){
+    const playersDetailList = players.map(player => ({
+      name: player,
+      score: 0,
+      isDrawing: false,
+      // joinedAt: new Date().toISOString(),
+    }));
+    res.json(playersDetailList);
   }
-  res.json(players);
+  else res.json({error:"Error occured !"});
 };
